@@ -150,12 +150,14 @@ class SessionController extends Controller
             'file' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
         ]);
 
+        $image = $this->compressor->process($request->file('file'));
+
         FileStore::delete($session->blessings_path);
         $session->update([
             'blessings_path' => FileStore::put(
-                $this->key($session, 'blessings', 'jpg'),
-                $this->compressor->compress($request->file('file')),
-                'image/jpeg'
+                $this->key($session, 'blessings', $image['extension']),
+                $image['contents'],
+                $image['mime']
             ),
         ]);
 
@@ -180,11 +182,12 @@ class SessionController extends Controller
         $next = ($session->quoteImages()->max('sort_order') ?? 0) + 1;
 
         foreach ($request->file('images') as $image) {
+            $processed = $this->compressor->process($image);
             $session->quoteImages()->create([
                 'image_path' => FileStore::put(
-                    $this->key($session, 'quotes', 'jpg'),
-                    $this->compressor->compress($image),
-                    'image/jpeg'
+                    $this->key($session, 'quotes', $processed['extension']),
+                    $processed['contents'],
+                    $processed['mime']
                 ),
                 'sort_order' => $next++,
             ]);

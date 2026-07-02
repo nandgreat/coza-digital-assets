@@ -3,13 +3,13 @@
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Intervention\Image\EncodedImage;
 use Intervention\Image\Encoders\JpegEncoder;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
+use Throwable;
 
 class ImageCompressor
 {
@@ -26,28 +26,59 @@ class ImageCompressor
     private const QUALITIES = [82, 72, 62, 52, 42];
 
     /**
-     * Compress an uploaded image to at most 2 MB and store it on the public disk.
-     * Returns the web-relative path (e.g. "storage/sessions/3/quotes/ab…jpg").
+     * Prepare an uploaded image for storage.
+     *
+     * When an image library (GD or Imagick) is available the image is compressed
+     * to a <= 2 MB JPEG. If none is available — or compression fails for any
+     * reason — the original file is returned unchanged so the upload still
+     * succeeds (the failure is logged).
+     *
+     * @return array{contents: string, extension: string, mime: string}
      */
-    public function compressAndStore(UploadedFile $file, string $directory): string
+    public function process(UploadedFile $file): array
     {
-        $path = trim($directory, '/').'/'.Str::random(40).'.jpg';
-        Storage::disk('public')->put($path, $this->compress($file));
+        $manager = $this->imageManager();
 
-        return 'storage/'.$path;
+        if ($manager !== null) {
+            try {
+                $image = $manager->decodePath($file->getRealPath());
+                $image->scaleDown(width: self::MAX_DIMENSION, height: self::MAX_DIMENSION);
+
+                return [
+                    'contents' => (string) $this->encodeUnderLimit($image),
+                    'extension' => 'jpg',
+                    'mime' => 'image/jpeg',
+                ];
+            } catch (Throwable $e) {
+                report($e);
+                // fall through to storing the original file untouched
+            }
+        }
+
+        return [
+            'contents' => (string) file_get_contents($file->getRealPath()),
+            'extension' => strtolower($file->getClientOriginalExtension() ?: 'jpg'),
+            'mime' => $file->getMimeType() ?: 'application/octet-stream',
+        ];
     }
 
-    /**
-     * Compress an uploaded image to at most 2 MB and return the raw JPEG bytes.
-     */
-    public function compress(UploadedFile $file): string
+    /** Whether image compression is available in this environment. */
+    public function canCompress(): bool
     {
-        $manager = new ImageManager(Driver::class);
+        return $this->imageManager() !== null;
+    }
 
-        $image = $manager->decodePath($file->getRealPath());
-        $image->scaleDown(width: self::MAX_DIMENSION, height: self::MAX_DIMENSION);
+    protected function imageManager(): ?ImageManager
+    {
+        if (extension_loaded('gd')) {
+            return new ImageManager(GdDriver::class);
+        }
 
-        return (string) $this->encodeUnderLimit($image);
+        if (extension_loaded('imagick')) {
+            return new ImageManager(ImagickDriver::class);
+        }
+
+        return null;
     }
 
     private function encodeUnderLimit(ImageInterface $image): EncodedImage
