@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COZA | Sermon Quotes</title>
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-light: #f1d97a;
+      --navy: #0b0f1f;
+      --navy-2: #141a33;
+      --white: #ffffff;
+      --muted: #b9bdd1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, var(--navy-2) 0%, var(--navy) 60%);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+    }
+
+    .back-link {
+      align-self: flex-start;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto 24px;
+      color: var(--gold-light);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .back-link:hover {
+      opacity: 0.8;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-badge {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.15), 0 10px 30px rgba(212, 175, 55, 0.35);
+    }
+
+    .logo-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    h1.brand {
+      font-size: clamp(24px, 4.5vw, 38px);
+      letter-spacing: 5px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .service-date {
+      color: var(--gold-light);
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .gallery {
+      width: 100%;
+      max-width: 1080px;
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .quote-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+
+    .quote-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.5);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .quote-image-wrap {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .quote-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s ease;
+    }
+
+    .quote-card:hover .quote-image-wrap img {
+      transform: scale(1.05);
+    }
+
+    .quote-actions {
+      display: flex;
+      gap: 10px;
+      padding: 14px 16px;
+    }
+
+    .action-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: opacity .2s ease;
+      font-family: inherit;
+    }
+
+    .action-btn:hover {
+      opacity: 0.85;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: var(--navy);
+    }
+
+    .share-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--gold-light);
+      color: var(--navy);
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 15, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 30px;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 30px;
+      color: var(--white);
+      font-size: 30px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      line-height: 1;
+    }
+
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    footer span {
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <a class="back-link" href="service-sunday-28-06-2026.html">&larr; Back to Service Assets</a>
+
+  <header>
+    <div class="logo-badge"><img src="images/coza_logo.png" alt="COZA Logo"></div>
+    <h1 class="brand">COZA</h1>
+    <div class="tagline">Sermon Quotes</div>
+    <div class="service-date">Sunday Service &middot; 28th June, 2026</div>
+  </header>
+
+  <main class="gallery" id="gallery">
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote1.jpg">
+        <img src="images/quotes/quote1.jpg" alt="Sermon Quote 1">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote1.jpg" download="coza-quote-1.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote1.jpg" data-title="Sermon Quote 1">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote2.jpeg">
+        <img src="images/quotes/quote2.jpeg" alt="Sermon Quote 2">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote2.jpeg" download="coza-quote-2.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote2.jpeg" data-title="Sermon Quote 2">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote3.jpeg">
+        <img src="images/quotes/quote3.jpeg" alt="Sermon Quote 3">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote3.jpeg" download="coza-quote-3.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote3.jpeg" data-title="Sermon Quote 3">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote4.jpeg">
+        <img src="images/quotes/quote4.jpeg" alt="Sermon Quote 4">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote4.jpeg" download="coza-quote-4.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote4.jpeg" data-title="Sermon Quote 4">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote5.jpeg">
+        <img src="images/quotes/quote5.jpeg" alt="Sermon Quote 5">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote5.jpeg" download="coza-quote-5.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote5.jpeg" data-title="Sermon Quote 5">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote6.jpeg">
+        <img src="images/quotes/quote6.jpeg" alt="Sermon Quote 6">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote6.jpeg" download="coza-quote-6.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote6.jpeg" data-title="Sermon Quote 6">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote7.jpeg">
+        <img src="images/quotes/quote7.jpeg" alt="Sermon Quote 7">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote7.jpeg" download="coza-quote-7.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote7.jpeg" data-title="Sermon Quote 7">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote8.jpeg">
+        <img src="images/quotes/quote8.jpeg" alt="Sermon Quote 8">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote8.jpeg" download="coza-quote-8.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote8.jpeg" data-title="Sermon Quote 8">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote9.jpeg">
+        <img src="images/quotes/quote9.jpeg" alt="Sermon Quote 9">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote9.jpeg" download="coza-quote-9.jpeg">⬇ Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote9.jpeg" data-title="Sermon Quote 9">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote10.jpeg">
+        <img src="images/quotes/quote10.jpeg" alt="Sermon Quote 10">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote10.jpeg" download="coza-quote-10.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote10.jpeg" data-title="Sermon Quote 10">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote11.jpeg">
+        <img src="images/quotes/quote11.jpeg" alt="Sermon Quote 11">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote11.jpeg" download="coza-quote-11.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote11.jpeg" data-title="Sermon Quote 11">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote12.jpeg">
+        <img src="images/quotes/quote12.jpeg" alt="Sermon Quote 12">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote12.jpeg" download="coza-quote-12.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote12.jpeg" data-title="Sermon Quote 12">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote13.jpeg">
+        <img src="images/quotes/quote13.jpeg" alt="Sermon Quote 13">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote13.jpeg" download="coza-quote-13.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote13.jpeg" data-title="Sermon Quote 13">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote14.jpeg">
+        <img src="images/quotes/quote14.jpeg" alt="Sermon Quote 14">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote14.jpeg" download="coza-quote-14.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote14.jpeg" data-title="Sermon Quote 14">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote15.jpeg">
+        <img src="images/quotes/quote15.jpeg" alt="Sermon Quote 15">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote15.jpeg" download="coza-quote-15.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote15.jpeg" data-title="Sermon Quote 15">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote16.jpeg">
+        <img src="images/quotes/quote16.jpeg" alt="Sermon Quote 16">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote16.jpeg" download="coza-quote-16.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote16.jpeg" data-title="Sermon Quote 16">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote17.jpeg">
+        <img src="images/quotes/quote17.jpeg" alt="Sermon Quote 17">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote17.jpeg" download="coza-quote-17.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote17.jpeg" data-title="Sermon Quote 17">↗
+          Share</button>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-image-wrap" data-full="images/quotes/quote18.jpeg">
+        <img src="images/quotes/quote18.jpeg" alt="Sermon Quote 18">
+      </div>
+      <div class="quote-actions">
+        <a class="action-btn download-btn" href="images/quotes/quote18.jpeg" download="coza-quote-18.jpeg">⬇
+          Download</a>
+        <button class="action-btn share-btn" data-share="images/quotes/quote18.jpeg" data-title="Sermon Quote 18">↗
+          Share</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; 2026 COZA Digital Service Assets &middot; Commonwealth of Zion Assembly &middot; All rights
+    reserved.<br><span style="margin-top:8px;display:inline-block;font-size:14px;">Powered by <strong
+        style="color:var(--gold-light);">Witty Inventions</strong></span>
+  </footer>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <img id="lightboxImg" src="" alt="Full size quote">
+  </div>
+
+  <div class="toast" id="toast">Link copied to clipboard</div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const toast = document.getElementById('toast');
+
+    document.querySelectorAll('.quote-image-wrap').forEach(wrap => {
+      wrap.addEventListener('click', () => {
+        lightboxImg.src = wrap.dataset.full;
+        lightbox.classList.add('open');
+      });
+    });
+
+    document.getElementById('lightboxClose').addEventListener('click', () => {
+      lightbox.classList.remove('open');
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.classList.remove('open');
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    document.querySelectorAll('.share-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const url = new URL(btn.dataset.share, window.location.href).href;
+        const title = btn.dataset.title || 'COZA Sermon Quote';
+
+        if (navigator.share) {
+          try {
+            await navigator.share({ title, text: title, url });
+          } catch (err) {
+            // user cancelled share — no action needed
+          }
+        } else if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(url);
+            showToast('Link copied to clipboard');
+          } catch (err) {
+            showToast('Unable to copy link');
+          }
+        } else {
+          showToast('Sharing not supported on this browser');
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
