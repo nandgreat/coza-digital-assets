@@ -43,7 +43,50 @@ Content is stored in MySQL as a three-level hierarchy:
 | `program_sessions` | An individual dated gathering; also holds `sermon_notes_path` and `blessings_path` |
 | `quote_images` | Sermon quote images belonging to a session |
 
-Uploaded files are stored on the filesystem (under `storage/app/public/sessions/{id}/…`, exposed via the `public/storage` symlink); only their web-relative paths are kept in the database. Seed data reuses the original files in `public/images/` and `public/downloads/`.
+Only a **reference** to each file is stored in the database (in `sermon_notes_path`,
+`blessings_path`, and `quote_images.image_path`), never the file itself:
+
+- `b2:{key}` — the file lives on **Backblaze B2** (new uploads, when configured)
+- `storage/…` — a local file under `public/storage` (fallback when B2 is off)
+- `images/…`, `downloads/…` — original seed files bundled in `public/`
+
+## File storage (Backblaze B2)
+
+When Backblaze credentials are present, every uploaded file (sermon notes PDF,
+blessing image, and quote images) is stored on **Backblaze B2 instead of this
+server**; images are still compressed to ≤ 2 MB first. If the credentials are
+absent, uploads fall back to local `public/storage`, so nothing breaks in
+development. Backblaze is used through its S3-compatible API via Laravel's `b2`
+disk in [`config/filesystems.php`](config/filesystems.php).
+
+### 👉 Where to put your credentials
+
+All Backblaze keys go in **`.env`** (this is the only place you edit):
+
+```
+B2_KEY_ID=            # Backblaze "Application Key ID" (keyID)
+B2_APPLICATION_KEY=   # Backblaze "Application Key" secret
+B2_REGION=            # e.g. us-west-004
+B2_BUCKET=            # your bucket NAME (not the Bucket ID)
+B2_ENDPOINT=          # https://s3.<region>.backblazeb2.com
+B2_URL=               # optional public base URL (leave blank to auto-build)
+```
+
+Getting them from Backblaze:
+
+1. Create a **Bucket** (set it to *Public* so files are viewable by link) — note
+   its name and the endpoint shown in the bucket details (e.g.
+   `s3.us-west-004.backblazeb2.com`). The region is the middle part
+   (`us-west-004`).
+2. **App Keys → Add a New Application Key**, scoped to that bucket. Copy the
+   **keyID** into `B2_KEY_ID` and the **applicationKey** into
+   `B2_APPLICATION_KEY` (the secret is shown only once).
+3. Fill in `B2_BUCKET` and `B2_ENDPOINT` (`https://` + the endpoint host).
+4. Run `php artisan config:clear`, then verify:
+
+   ```bash
+   php artisan backblaze:check    # writes, reads and deletes a test file on B2
+   ```
 
 ## Admin area
 

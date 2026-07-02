@@ -31,17 +31,23 @@ class ImageCompressor
      */
     public function compressAndStore(UploadedFile $file, string $directory): string
     {
+        $path = trim($directory, '/').'/'.Str::random(40).'.jpg';
+        Storage::disk('public')->put($path, $this->compress($file));
+
+        return 'storage/'.$path;
+    }
+
+    /**
+     * Compress an uploaded image to at most 2 MB and return the raw JPEG bytes.
+     */
+    public function compress(UploadedFile $file): string
+    {
         $manager = new ImageManager(Driver::class);
 
         $image = $manager->decodePath($file->getRealPath());
         $image->scaleDown(width: self::MAX_DIMENSION, height: self::MAX_DIMENSION);
 
-        $encoded = $this->encodeUnderLimit($image);
-
-        $path = trim($directory, '/').'/'.Str::random(40).'.jpg';
-        Storage::disk('public')->put($path, (string) $encoded);
-
-        return 'storage/'.$path;
+        return (string) $this->encodeUnderLimit($image);
     }
 
     private function encodeUnderLimit(ImageInterface $image): EncodedImage

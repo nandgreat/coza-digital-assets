@@ -7,9 +7,9 @@ use App\Models\Program;
 use App\Models\ProgramSession;
 use App\Models\QuoteImage;
 use App\Services\ImageCompressor;
+use App\Support\FileStore;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -65,11 +65,11 @@ class SessionController extends Controller
                 'sessionDate' => $session->session_date?->format('Y-m-d'),
                 'minister' => $session->minister,
                 'icon' => $session->icon,
-                'sermonNotesUrl' => $session->sermon_notes_path ? asset($session->sermon_notes_path) : null,
-                'blessingsUrl' => $session->blessings_path ? asset($session->blessings_path) : null,
+                'sermonNotesUrl' => FileStore::url($session->sermon_notes_path),
+                'blessingsUrl' => FileStore::url($session->blessings_path),
                 'quotes' => $session->quoteImages->map(fn (QuoteImage $q) => [
                     'id' => $q->id,
-                    'url' => asset($q->image_path),
+                    'url' => FileStore::url($q->image_path),
                 ]),
                 'program' => [
                     'name' => $session->program->name,
@@ -105,10 +105,10 @@ class SessionController extends Controller
 
     public function destroy(ProgramSession $session): RedirectResponse
     {
-        $this->deleteFile($session->sermon_notes_path);
-        $this->deleteFile($session->blessings_path);
+        FileStore::delete($session->sermon_notes_path);
+        FileStore::delete($session->blessings_path);
         foreach ($session->quoteImages as $quote) {
-            $this->deleteFile($quote->image_path);
+            FileStore::delete($quote->image_path);
         }
 
         $session->delete();
@@ -122,9 +122,15 @@ class SessionController extends Controller
             'file' => ['required', 'file', 'mimes:pdf', 'max:20480'],
         ]);
 
-        $this->deleteFile($session->sermon_notes_path);
+        $file = $request->file('file');
+
+        FileStore::delete($session->sermon_notes_path);
         $session->update([
-            'sermon_notes_path' => $this->storeFile($request->file('file'), $session, 'notes'),
+            'sermon_notes_path' => FileStore::put(
+                $this->key($session, 'notes', 'pdf'),
+                file_get_contents($file->getRealPath()),
+                'application/pdf'
+            ),
         ]);
 
         return back()->with('success', 'Sermon notes uploaded.');
@@ -132,7 +138,7 @@ class SessionController extends Controller
 
     public function deleteSermonNotes(ProgramSession $session): RedirectResponse
     {
-        $this->deleteFile($session->sermon_notes_path);
+        FileStore::delete($session->sermon_notes_path);
         $session->update(['sermon_notes_path' => null]);
 
         return back()->with('success', 'Sermon notes removed.');
@@ -144,11 +150,12 @@ class SessionController extends Controller
             'file' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
         ]);
 
-        $this->deleteFile($session->blessings_path);
+        FileStore::delete($session->blessings_path);
         $session->update([
-            'blessings_path' => $this->compressor->compressAndStore(
-                $request->file('file'),
-                "sessions/{$session->id}/blessings"
+            'blessings_path' => FileStore::put(
+                $this->key($session, 'blessings', 'jpg'),
+                $this->compressor->compress($request->file('file')),
+                'image/jpeg'
             ),
         ]);
 
@@ -157,7 +164,7 @@ class SessionController extends Controller
 
     public function deleteBlessings(ProgramSession $session): RedirectResponse
     {
-        $this->deleteFile($session->blessings_path);
+        FileStore::delete($session->blessings_path);
         $session->update(['blessings_path' => null]);
 
         return back()->with('success', "Our Father's Blessing removed.");
@@ -174,9 +181,10 @@ class SessionController extends Controller
 
         foreach ($request->file('images') as $image) {
             $session->quoteImages()->create([
-                'image_path' => $this->compressor->compressAndStore(
-                    $image,
-                    "sessions/{$session->id}/quotes"
+                'image_path' => FileStore::put(
+                    $this->key($session, 'quotes', 'jpg'),
+                    $this->compressor->compress($image),
+                    'image/jpeg'
                 ),
                 'sort_order' => $next++,
             ]);
@@ -189,27 +197,16 @@ class SessionController extends Controller
     {
         abort_unless($quote->program_session_id === $session->id, 404);
 
-        $this->deleteFile($quote->image_path);
+        FileStore::delete($quote->image_path);
         $quote->delete();
 
         return back()->with('success', 'Quote removed.');
     }
 
-    private function storeFile($file, ProgramSession $session, string $folder): string
+    /** Build a unique storage key for a session's file. */
+    private function key(ProgramSession $session, string $folder, string $extension): string
     {
-        $path = $file->store("sessions/{$session->id}/{$folder}", 'public');
-
-        // Stored web-relative so asset() resolves it (public disk is symlinked to public/storage).
-        return 'storage/'.$path;
-    }
-
-    private function deleteFile(?string $webPath): void
-    {
-        if (! $webPath || ! Str::startsWith($webPath, 'storage/')) {
-            return;
-        }
-
-        Storage::disk('public')->delete(Str::after($webPath, 'storage/'));
+        return "sessions/{$session->id}/{$folder}/".Str::random(40).".{$extension}";
     }
 
     private function uniqueSlug(string $name): string

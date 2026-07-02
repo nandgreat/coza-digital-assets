@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Program;
 use App\Models\ProgramSession;
 use App\Models\ServiceType;
+use App\Support\FileStore;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -80,7 +81,7 @@ class SiteController extends Controller
                 'title' => 'Sermon Notes',
                 'description' => "Full written notes from today's message",
                 'icon' => '📖',
-                'url' => asset($session->sermon_notes_path),
+                'url' => FileStore::url($session->sermon_notes_path),
             ];
         }
 
@@ -90,7 +91,7 @@ class SiteController extends Controller
                 'title' => "Our Father's Blessings",
                 'description' => 'Declarations and blessings from the service',
                 'icon' => '🙏',
-                'url' => asset($session->blessings_path),
+                'url' => FileStore::url($session->blessings_path),
             ];
         }
 
@@ -118,7 +119,7 @@ class SiteController extends Controller
             'session' => $this->sessionPayload($session),
             'quotes' => $session->quoteImages->values()
                 ->map(fn ($quote, $index) => [
-                    'url' => asset($quote->image_path),
+                    'url' => FileStore::url($quote->image_path),
                     'title' => 'Sermon Quote '.($index + 1),
                     'downloadName' => 'coza-quote-'.($index + 1).'.jpeg',
                 ]),

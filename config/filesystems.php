@@ -60,6 +60,27 @@ return [
             'report' => false,
         ],
 
+        // Backblaze B2 (via its S3-compatible API). Credentials live in .env.
+        // Uses the custom "b2-s3" driver (registered in AppServiceProvider) which
+        // strips the S3 ACL header that Backblaze rejects.
+        // The endpoint is normalised to always include an https:// scheme.
+        'b2' => [
+            'driver' => 'b2-s3',
+            'key' => env('B2_KEY_ID'),
+            'secret' => env('B2_APPLICATION_KEY'),
+            'region' => env('B2_REGION'),
+            'bucket' => env('B2_BUCKET'),
+            'endpoint' => ($b2Endpoint = env('B2_ENDPOINT'))
+                ? (str_contains($b2Endpoint, '://') ? $b2Endpoint : 'https://'.$b2Endpoint)
+                : null,
+            'url' => env('B2_URL') ?: null,
+            'use_path_style_endpoint' => env('B2_USE_PATH_STYLE_ENDPOINT', false),
+            // No per-object ACL: Backblaze rejects S3 canned ACLs and instead
+            // governs public access at the bucket level (set the bucket to Public).
+            'throw' => true,
+            'report' => false,
+        ],
+
     ],
 
     /*
