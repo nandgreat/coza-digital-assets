@@ -71,7 +71,7 @@ class SiteController extends Controller
 
     public function session(ProgramSession $session): Response
     {
-        $session->load(['program.serviceType', 'quoteImages']);
+        $session->load(['program.serviceType', 'quoteImages', 'prophecyImages']);
 
         $resources = [];
 
@@ -105,6 +105,16 @@ class SiteController extends Controller
             ];
         }
 
+        if ($session->prophecyImages->isNotEmpty()) {
+            $resources[] = [
+                'type' => 'prophecies',
+                'title' => '7DG Prophecies',
+                'description' => 'Prophetic words released during the service',
+                'icon' => '🕊️',
+                'url' => route('sessions.prophecies', $session),
+            ];
+        }
+
         return Inertia::render('Session', [
             'session' => $this->sessionPayload($session),
             'resources' => $resources,
@@ -122,6 +132,21 @@ class SiteController extends Controller
                     'url' => FileStore::url($quote->image_path),
                     'title' => 'Sermon Quote '.($index + 1),
                     'downloadName' => 'coza-quote-'.($index + 1).'.jpeg',
+                ]),
+        ]);
+    }
+
+    public function prophecies(ProgramSession $session): Response
+    {
+        $session->load(['program.serviceType', 'prophecyImages']);
+
+        return Inertia::render('Prophecies', [
+            'session' => $this->sessionPayload($session),
+            'prophecies' => $session->prophecyImages->values()
+                ->map(fn ($prophecy, $index) => [
+                    'url' => FileStore::url($prophecy->image_path),
+                    'title' => '7DG Prophecy '.($index + 1),
+                    'downloadName' => 'coza-prophecy-'.($index + 1).'.jpeg',
                 ]),
         ]);
     }

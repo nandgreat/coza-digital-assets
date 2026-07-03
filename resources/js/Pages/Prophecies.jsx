@@ -1,0 +1,85 @@
+import { Head } from '@inertiajs/react';
+import { useState } from 'react';
+import Layout from '../Components/Layout';
+
+export default function Prophecies({ session, prophecies }) {
+    const [lightboxSrc, setLightboxSrc] = useState(null);
+    const [toast, setToast] = useState(null);
+
+    const contextParts = [
+        session.editionTag ? session.editionTag : session.program.name,
+        session.subtitle ? `${session.name} — ${session.subtitle}` : session.name,
+        session.dateLabel,
+    ].filter(Boolean);
+
+    function showToast(message) {
+        setToast(message);
+        setTimeout(() => setToast(null), 2200);
+    }
+
+    async function share(prophecy) {
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: prophecy.title, text: prophecy.title, url: prophecy.url });
+            } catch {
+                // user cancelled share — no action needed
+            }
+        } else if (navigator.clipboard) {
+            try {
+                await navigator.clipboard.writeText(prophecy.url);
+                showToast('Link copied to clipboard');
+            } catch {
+                showToast('Unable to copy link');
+            }
+        } else {
+            showToast('Sharing not supported on this browser');
+        }
+    }
+
+    return (
+        <Layout
+            backHref={`/sessions/${session.slug}`}
+            backLabel="Back to Service Assets"
+            tagline="7DG Prophecies"
+            headerExtra={<div className="header-date">{contextParts.join(' · ')}</div>}
+        >
+            <Head title="7DG Prophecies" />
+
+            {prophecies.length > 0 ? (
+                <main className="gallery">
+                    {prophecies.map((prophecy) => (
+                        <div className="quote-card" key={prophecy.url}>
+                            <div className="quote-image-wrap" onClick={() => setLightboxSrc(prophecy.url)}>
+                                <img src={prophecy.url} alt={prophecy.title} loading="lazy" />
+                            </div>
+                            <div className="quote-actions">
+                                <a className="action-btn" href={prophecy.url} download={prophecy.downloadName}>
+                                    ⬇ Download
+                                </a>
+                                <button className="action-btn share-btn" onClick={() => share(prophecy)}>
+                                    ↗ Share
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </main>
+            ) : (
+                <div className="empty-state">
+                    <span className="flame">🕊️</span>
+                    <p>Prophecy images for this service will appear here once they are uploaded.</p>
+                </div>
+            )}
+
+            {lightboxSrc && (
+                <div className="lightbox" onClick={(e) => e.target === e.currentTarget && setLightboxSrc(null)}>
+                    <button className="lightbox-close" onClick={() => setLightboxSrc(null)}>
+                        &times;
+                    </button>
+                    <img src={lightboxSrc} alt="Full size prophecy" />
+                </div>
+            )}
+
+            <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
+        </Layout>
+    );
+}

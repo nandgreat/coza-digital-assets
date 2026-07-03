@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Program;
 use App\Models\ProgramSession;
+use App\Models\ProphecyImage;
 use App\Models\QuoteImage;
 use App\Services\ImageCompressor;
 use App\Support\FileStore;
@@ -53,7 +54,7 @@ class SessionController extends Controller
 
     public function edit(ProgramSession $session): Response
     {
-        $session->load(['program.serviceType', 'quoteImages']);
+        $session->load(['program.serviceType', 'quoteImages', 'prophecyImages']);
 
         return Inertia::render('Admin/Session', [
             'session' => [
@@ -70,6 +71,10 @@ class SessionController extends Controller
                 'quotes' => $session->quoteImages->map(fn (QuoteImage $q) => [
                     'id' => $q->id,
                     'url' => FileStore::url($q->image_path),
+                ]),
+                'prophecies' => $session->prophecyImages->map(fn (ProphecyImage $p) => [
+                    'id' => $p->id,
+                    'url' => FileStore::url($p->image_path),
                 ]),
                 'program' => [
                     'name' => $session->program->name,
@@ -109,6 +114,9 @@ class SessionController extends Controller
         FileStore::delete($session->blessings_path);
         foreach ($session->quoteImages as $quote) {
             FileStore::delete($quote->image_path);
+        }
+        foreach ($session->prophecyImages as $prophecy) {
+            FileStore::delete($prophecy->image_path);
         }
 
         $session->delete();
@@ -204,6 +212,40 @@ class SessionController extends Controller
         $quote->delete();
 
         return back()->with('success', 'Quote removed.');
+    }
+
+    public function uploadProphecies(Request $request, ProgramSession $session): RedirectResponse
+    {
+        $request->validate([
+            'images' => ['required', 'array', 'min:1'],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
+        ]);
+
+        $next = ($session->prophecyImages()->max('sort_order') ?? 0) + 1;
+
+        foreach ($request->file('images') as $image) {
+            $processed = $this->compressor->process($image);
+            $session->prophecyImages()->create([
+                'image_path' => FileStore::put(
+                    $this->key($session, 'prophecies', $processed['extension']),
+                    $processed['contents'],
+                    $processed['mime']
+                ),
+                'sort_order' => $next++,
+            ]);
+        }
+
+        return back()->with('success', '7DG Prophecies uploaded.');
+    }
+
+    public function deleteProphecy(ProgramSession $session, ProphecyImage $prophecy): RedirectResponse
+    {
+        abort_unless($prophecy->program_session_id === $session->id, 404);
+
+        FileStore::delete($prophecy->image_path);
+        $prophecy->delete();
+
+        return back()->with('success', 'Prophecy removed.');
     }
 
     /** Build a unique storage key for a session's file. */

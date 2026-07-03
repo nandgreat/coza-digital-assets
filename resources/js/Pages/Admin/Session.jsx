@@ -144,6 +144,57 @@ function QuotesSlot({ session }) {
     );
 }
 
+function PropheciesSlot({ session }) {
+    const inputRef = useRef(null);
+    const { setData, post, processing, errors, progress } = useForm({ images: [] });
+
+    function upload(e) {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+        setData('images', files);
+        post(`/admin/sessions/${session.slug}/prophecies`, {
+            preserveScroll: true,
+            forceFormData: true,
+            onFinish: () => { if (inputRef.current) inputRef.current.value = ''; },
+        });
+    }
+
+    return (
+        <div className="admin-slot">
+            <div className="admin-slot-head">
+                <h3>7DG Prophecies</h3>
+                <p>Upload one or more prophecy images. They appear in the public gallery.</p>
+            </div>
+
+            {session.prophecies.length > 0 ? (
+                <div className="admin-quote-grid">
+                    {session.prophecies.map((prophecy) => (
+                        <div className="admin-quote" key={prophecy.id}>
+                            <img src={prophecy.url} alt="7DG prophecy" />
+                            <button
+                                className="admin-quote-remove"
+                                title="Remove"
+                                onClick={() => router.delete(`/admin/sessions/${session.slug}/prophecies/${prophecy.id}`, { preserveScroll: true })}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p className="admin-empty-slot">No prophecies uploaded yet.</p>
+            )}
+
+            <label className="arrow-btn small admin-upload-btn">
+                Upload images
+                <input ref={inputRef} type="file" accept="image/*" multiple hidden onChange={upload} disabled={processing} />
+            </label>
+            {progress && <span className="admin-progress">{progress.percentage}%</span>}
+            {errors.images && <span className="admin-error">{errors.images}</span>}
+        </div>
+    );
+}
+
 export default function Session({ session }) {
     return (
         <AdminLayout title={`Manage — ${session.name}`}>
@@ -192,6 +243,7 @@ export default function Session({ session }) {
                         isImage={true}
                     />
                     <QuotesSlot session={session} />
+                    <PropheciesSlot session={session} />
                 </div>
             </section>
         </AdminLayout>

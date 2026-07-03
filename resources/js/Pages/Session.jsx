@@ -24,14 +24,14 @@ export default function Session({ session, resources }) {
                                 <p>{resource.description}</p>
                             </div>
                         </div>
-                        {resource.type === 'quotes' ? (
-                            <Link className="action-btn" href={resource.url}>
-                                View
-                            </Link>
-                        ) : (
+                        {resource.type === 'download' ? (
                             <a className="action-btn" href={resource.url} download>
                                 Download
                             </a>
+                        ) : (
+                            <Link className="action-btn" href={resource.url}>
+                                View
+                            </Link>
                         )}
                     </div>
                 ))}

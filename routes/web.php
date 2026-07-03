@@ -16,6 +16,7 @@ Route::get('/service-types/{serviceType}', [SiteController::class, 'serviceType'
 Route::get('/programs/{program}', [SiteController::class, 'program'])->name('programs.show');
 Route::get('/sessions/{session}', [SiteController::class, 'session'])->name('sessions.show');
 Route::get('/sessions/{session}/quotes', [SiteController::class, 'quotes'])->name('sessions.quotes');
+Route::get('/sessions/{session}/prophecies', [SiteController::class, 'prophecies'])->name('sessions.prophecies');
 
 /*
 | Admin authentication
@@ -54,4 +55,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::post('sessions/{session}/quotes', [SessionController::class, 'uploadQuotes'])->name('sessions.quotes.store');
     Route::delete('sessions/{session}/quotes/{quote}', [SessionController::class, 'deleteQuote'])->name('sessions.quotes.destroy');
+
+    Route::post('sessions/{session}/prophecies', [SessionController::class, 'uploadProphecies'])->name('sessions.prophecies.store');
+    Route::delete('sessions/{session}/prophecies/{prophecy}', [SessionController::class, 'deleteProphecy'])->name('sessions.prophecies.destroy');
 });
