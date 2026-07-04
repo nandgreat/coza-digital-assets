@@ -206,7 +206,7 @@ class SessionController extends Controller
 
     public function deleteQuote(ProgramSession $session, QuoteImage $quote): RedirectResponse
     {
-        abort_unless($quote->program_session_id === $session->id, 404);
+        abort_unless((int) $quote->program_session_id === (int) $session->id, 404);
 
         FileStore::delete($quote->image_path);
         $quote->delete();
@@ -240,7 +240,7 @@ class SessionController extends Controller
 
     public function deleteProphecy(ProgramSession $session, ProphecyImage $prophecy): RedirectResponse
     {
-        abort_unless($prophecy->program_session_id === $session->id, 404);
+        abort_unless((int) $prophecy->program_session_id === (int) $session->id, 404);
 
         FileStore::delete($prophecy->image_path);
         $prophecy->delete();
