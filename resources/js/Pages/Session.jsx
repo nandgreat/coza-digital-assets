@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import Layout from '../Components/Layout';
+import { trackDownload } from '../analytics';
 
 export default function Session({ session, resources }) {
     return (
@@ -25,7 +26,20 @@ export default function Session({ session, resources }) {
                             </div>
                         </div>
                         {resource.type === 'download' ? (
-                            <a className="action-btn" href={resource.url} download>
+                            <a
+                                className="action-btn"
+                                href={resource.url}
+                                download
+                                onClick={() =>
+                                    trackDownload({
+                                        assetType: resource.assetType,
+                                        assetTitle: resource.title,
+                                        serviceType: session.serviceType,
+                                        program: session.program.name,
+                                        session: session.name,
+                                    })
+                                }
+                            >
                                 Download
                             </a>
                         ) : (

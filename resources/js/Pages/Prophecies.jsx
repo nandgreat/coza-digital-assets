@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import Layout from '../Components/Layout';
+import { trackDownload } from '../analytics';
 
 export default function Prophecies({ session, prophecies }) {
     const [lightboxSrc, setLightboxSrc] = useState(null);
@@ -53,7 +54,20 @@ export default function Prophecies({ session, prophecies }) {
                                 <img src={prophecy.url} alt={prophecy.title} loading="lazy" />
                             </div>
                             <div className="quote-actions">
-                                <a className="action-btn" href={prophecy.url} download={prophecy.downloadName}>
+                                <a
+                                    className="action-btn"
+                                    href={prophecy.url}
+                                    download={prophecy.downloadName}
+                                    onClick={() =>
+                                        trackDownload({
+                                            assetType: 'prophecy',
+                                            assetTitle: prophecy.title,
+                                            serviceType: session.serviceType,
+                                            program: session.program.name,
+                                            session: session.name,
+                                        })
+                                    }
+                                >
                                     ⬇ Download
                                 </a>
                                 <button className="action-btn share-btn" onClick={() => share(prophecy)}>

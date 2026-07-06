@@ -78,6 +78,7 @@ class SiteController extends Controller
         if ($session->sermon_notes_path) {
             $resources[] = [
                 'type' => 'download',
+                'assetType' => 'sermon_notes',
                 'title' => 'Sermon Notes',
                 'description' => "Full written notes from today's message",
                 'icon' => '📖',
@@ -88,6 +89,7 @@ class SiteController extends Controller
         if ($session->blessings_path) {
             $resources[] = [
                 'type' => 'download',
+                'assetType' => 'blessing',
                 'title' => "Our Father's Blessings",
                 'description' => 'Declarations and blessings from the service',
                 'icon' => '🙏',
@@ -161,6 +163,7 @@ class SiteController extends Controller
             'dateLabel' => $session->date_label,
             'minister' => $session->minister,
             'editionTag' => $session->edition_tag,
+            'serviceType' => $session->program->serviceType->name,
             'program' => [
                 'slug' => $session->program->slug,
                 'name' => $session->program->name,

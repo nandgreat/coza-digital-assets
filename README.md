@@ -113,3 +113,35 @@ To change the admin password, edit `ADMIN_PASSWORD` in `.env` (must be exactly 6
 | `/programs/{slug}` | Sessions within a program |
 | `/sessions/{slug}` | Session detail with resources |
 | `/sessions/{slug}/quotes` | Sermon quotes gallery (lightbox, download, share) |
+
+## Analytics (Google Analytics 4)
+
+Set your GA4 **Measurement ID** in `.env` to turn on tracking (leave blank to disable):
+
+```
+GA_MEASUREMENT_ID=G-XXXXXXXXXX
+```
+
+When set, the site loads GA4 and fires a custom **`asset_download`** event every time
+a visitor downloads a file, with these parameters:
+
+| Parameter | Example | Meaning |
+|---|---|---|
+| `asset_type` | `sermon_notes` \| `blessing` \| `quote` \| `prophecy` | **the asset category** |
+| `asset_title` | `Sermon Notes`, `Sermon Quote 3` | which item |
+| `service_type` | `COZA Sundays`, `7DG` | the top-level category |
+| `program` | `7DG 2026` | the program/edition |
+| `session` | `Evening Service` | the session |
+
+### Seeing download stats by category in GA4
+
+1. In **GA4 → Admin → Custom definitions → Create custom dimensions**, add an
+   event-scoped dimension for each parameter you want to report on — at minimum
+   `asset_type` (and optionally `service_type`, `program`, `session`).
+2. Give them ~24h to start collecting, then in **Reports → Engagement → Events**
+   open the `asset_download` event, or build an **Exploration** with `asset_type`
+   (and `service_type`) as the breakdown to see downloads per category.
+   `Realtime` and `DebugView` show the events immediately for testing.
+
+Nothing is tracked in development unless you set an ID; admin pages are not excluded,
+so use a separate GA property (or a filter) if you want to keep staff activity out.

@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'google_analytics' => [
+        // GA4 Measurement ID, e.g. G-XXXXXXXXXX. Leave blank to disable tracking.
+        'id' => env('GA_MEASUREMENT_ID'),
+    ],
+
 ];

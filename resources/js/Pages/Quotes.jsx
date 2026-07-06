@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import Layout from '../Components/Layout';
+import { trackDownload } from '../analytics';
 
 export default function Quotes({ session, quotes }) {
     const [lightboxSrc, setLightboxSrc] = useState(null);
@@ -53,7 +54,20 @@ export default function Quotes({ session, quotes }) {
                                 <img src={quote.url} alt={quote.title} loading="lazy" />
                             </div>
                             <div className="quote-actions">
-                                <a className="action-btn" href={quote.url} download={quote.downloadName}>
+                                <a
+                                    className="action-btn"
+                                    href={quote.url}
+                                    download={quote.downloadName}
+                                    onClick={() =>
+                                        trackDownload({
+                                            assetType: 'quote',
+                                            assetTitle: quote.title,
+                                            serviceType: session.serviceType,
+                                            program: session.program.name,
+                                            session: session.name,
+                                        })
+                                    }
+                                >
                                     ⬇ Download
                                 </a>
                                 <button className="action-btn share-btn" onClick={() => share(quote)}>
