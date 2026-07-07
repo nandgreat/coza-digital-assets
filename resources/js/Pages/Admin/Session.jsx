@@ -144,6 +144,57 @@ function QuotesSlot({ session }) {
     );
 }
 
+function BlessingsSlot({ session }) {
+    const inputRef = useRef(null);
+    const { setData, post, processing, errors, progress } = useForm({ images: [] });
+
+    function upload(e) {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+        setData('images', files);
+        post(`/admin/sessions/${session.slug}/blessings`, {
+            preserveScroll: true,
+            forceFormData: true,
+            onFinish: () => { if (inputRef.current) inputRef.current.value = ''; },
+        });
+    }
+
+    return (
+        <div className="admin-slot">
+            <div className="admin-slot-head">
+                <h3>Our Father's Blessing</h3>
+                <p>Upload one or more blessing images. They appear in the public gallery.</p>
+            </div>
+
+            {session.blessings.length > 0 ? (
+                <div className="admin-quote-grid">
+                    {session.blessings.map((blessing) => (
+                        <div className="admin-quote" key={blessing.id}>
+                            <img src={blessing.url} alt="Our Father's Blessing" />
+                            <button
+                                className="admin-quote-remove"
+                                title="Remove"
+                                onClick={() => router.delete(`/admin/sessions/${session.slug}/blessings/${blessing.id}`, { preserveScroll: true })}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p className="admin-empty-slot">No blessings uploaded yet.</p>
+            )}
+
+            <label className="arrow-btn small admin-upload-btn">
+                Upload images
+                <input ref={inputRef} type="file" accept="image/*" multiple hidden onChange={upload} disabled={processing} />
+            </label>
+            {progress && <span className="admin-progress">{progress.percentage}%</span>}
+            {errors.images && <span className="admin-error">{errors.images}</span>}
+        </div>
+    );
+}
+
 function PropheciesSlot({ session }) {
     const inputRef = useRef(null);
     const { setData, post, processing, errors, progress } = useForm({ images: [] });
@@ -233,15 +284,7 @@ export default function Session({ session }) {
                         currentUrl={session.sermonNotesUrl}
                         isImage={false}
                     />
-                    <SingleFileSlot
-                        session={session}
-                        label="Our Father's Blessing"
-                        hint="A single image (max 10 MB)."
-                        accept="image/*"
-                        kind="blessings"
-                        currentUrl={session.blessingsUrl}
-                        isImage={true}
-                    />
+                    <BlessingsSlot session={session} />
                     <QuotesSlot session={session} />
                     <PropheciesSlot session={session} />
                 </div>

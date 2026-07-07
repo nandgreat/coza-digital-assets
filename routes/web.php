@@ -15,12 +15,13 @@ Route::get('/', [SiteController::class, 'home'])->name('home');
 Route::get('/service-types/{serviceType}', [SiteController::class, 'serviceType'])->name('serviceTypes.show');
 Route::get('/programs/{program}', [SiteController::class, 'program'])->name('programs.show');
 Route::get('/sessions/{session}', [SiteController::class, 'session'])->name('sessions.show');
+Route::get('/sessions/{session}/blessings', [SiteController::class, 'blessings'])->name('sessions.blessings');
 Route::get('/sessions/{session}/quotes', [SiteController::class, 'quotes'])->name('sessions.quotes');
 Route::get('/sessions/{session}/prophecies', [SiteController::class, 'prophecies'])->name('sessions.prophecies');
 
 // Forced-download endpoints (stream files as attachments, same-origin)
 Route::get('/sessions/{session}/sermon-notes/download', [SiteController::class, 'downloadSermonNotes'])->name('sessions.download.notes');
-Route::get('/sessions/{session}/blessings/download', [SiteController::class, 'downloadBlessings'])->name('sessions.download.blessings');
+Route::get('/sessions/{session}/blessings/{blessing}/download', [SiteController::class, 'downloadBlessing'])->name('sessions.download.blessing');
 Route::get('/sessions/{session}/quotes/{quote}/download', [SiteController::class, 'downloadQuote'])->name('sessions.download.quote');
 Route::get('/sessions/{session}/prophecies/{prophecy}/download', [SiteController::class, 'downloadProphecy'])->name('sessions.download.prophecy');
 
@@ -57,7 +58,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('sessions/{session}/sermon-notes', [SessionController::class, 'deleteSermonNotes'])->name('sessions.sermon-notes.destroy');
 
     Route::post('sessions/{session}/blessings', [SessionController::class, 'uploadBlessings'])->name('sessions.blessings.store');
-    Route::delete('sessions/{session}/blessings', [SessionController::class, 'deleteBlessings'])->name('sessions.blessings.destroy');
+    Route::delete('sessions/{session}/blessings/{blessing}', [SessionController::class, 'deleteBlessing'])->name('sessions.blessings.destroy');
 
     Route::post('sessions/{session}/quotes', [SessionController::class, 'uploadQuotes'])->name('sessions.quotes.store');
     Route::delete('sessions/{session}/quotes/{quote}', [SessionController::class, 'deleteQuote'])->name('sessions.quotes.destroy');

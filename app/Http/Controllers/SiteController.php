@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlessingImage;
 use App\Models\Program;
 use App\Models\ProgramSession;
 use App\Models\ProphecyImage;
@@ -74,7 +75,7 @@ class SiteController extends Controller
 
     public function session(ProgramSession $session): Response
     {
-        $session->load(['program.serviceType', 'quoteImages', 'prophecyImages']);
+        $session->load(['program.serviceType', 'blessingImages', 'quoteImages', 'prophecyImages']);
 
         $resources = [];
 
@@ -90,15 +91,13 @@ class SiteController extends Controller
             ];
         }
 
-        if ($session->blessings_path) {
+        if ($session->blessingImages->isNotEmpty()) {
             $resources[] = [
-                'type' => 'download',
-                'assetType' => 'blessing',
+                'type' => 'blessings',
                 'title' => "Our Father's Blessings",
                 'description' => 'Declarations and blessings from the service',
                 'icon' => '🙏',
-                'url' => FileStore::url($session->blessings_path),
-                'downloadUrl' => route('sessions.download.blessings', $session),
+                'url' => route('sessions.blessings', $session),
             ];
         }
 
@@ -125,6 +124,22 @@ class SiteController extends Controller
         return Inertia::render('Session', [
             'session' => $this->sessionPayload($session),
             'resources' => $resources,
+        ]);
+    }
+
+    public function blessings(ProgramSession $session): Response
+    {
+        $session->load(['program.serviceType', 'blessingImages']);
+
+        return Inertia::render('Blessings', [
+            'session' => $this->sessionPayload($session),
+            'blessings' => $session->blessingImages->values()
+                ->map(fn ($blessing, $index) => [
+                    'url' => FileStore::url($blessing->image_path),
+                    'downloadUrl' => route('sessions.download.blessing', [$session, $blessing->id]),
+                    'title' => "Our Father's Blessing ".($index + 1),
+                    'downloadName' => 'coza-blessing-'.($index + 1).'.jpeg',
+                ]),
         ]);
     }
 
@@ -168,11 +183,13 @@ class SiteController extends Controller
         );
     }
 
-    public function downloadBlessings(ProgramSession $session): HttpResponse
+    public function downloadBlessing(ProgramSession $session, BlessingImage $blessing): HttpResponse
     {
+        abort_unless((int) $blessing->program_session_id === (int) $session->id, 404);
+
         return FileStore::download(
-            $session->blessings_path,
-            "{$session->slug}-blessing.".FileStore::extension($session->blessings_path)
+            $blessing->image_path,
+            "{$session->slug}-blessing-{$blessing->id}.".FileStore::extension($blessing->image_path)
         );
     }
 

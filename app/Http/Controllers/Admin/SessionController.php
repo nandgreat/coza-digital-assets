@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BlessingImage;
 use App\Models\Program;
 use App\Models\ProgramSession;
 use App\Models\ProphecyImage;
@@ -54,7 +55,7 @@ class SessionController extends Controller
 
     public function edit(ProgramSession $session): Response
     {
-        $session->load(['program.serviceType', 'quoteImages', 'prophecyImages']);
+        $session->load(['program.serviceType', 'quoteImages', 'prophecyImages', 'blessingImages']);
 
         return Inertia::render('Admin/Session', [
             'session' => [
@@ -67,7 +68,10 @@ class SessionController extends Controller
                 'minister' => $session->minister,
                 'icon' => $session->icon,
                 'sermonNotesUrl' => FileStore::url($session->sermon_notes_path),
-                'blessingsUrl' => FileStore::url($session->blessings_path),
+                'blessings' => $session->blessingImages->map(fn (BlessingImage $b) => [
+                    'id' => $b->id,
+                    'url' => FileStore::url($b->image_path),
+                ]),
                 'quotes' => $session->quoteImages->map(fn (QuoteImage $q) => [
                     'id' => $q->id,
                     'url' => FileStore::url($q->image_path),
@@ -111,7 +115,9 @@ class SessionController extends Controller
     public function destroy(ProgramSession $session): RedirectResponse
     {
         FileStore::delete($session->sermon_notes_path);
-        FileStore::delete($session->blessings_path);
+        foreach ($session->blessingImages as $blessing) {
+            FileStore::delete($blessing->image_path);
+        }
         foreach ($session->quoteImages as $quote) {
             FileStore::delete($quote->image_path);
         }
@@ -155,27 +161,33 @@ class SessionController extends Controller
     public function uploadBlessings(Request $request, ProgramSession $session): RedirectResponse
     {
         $request->validate([
-            'file' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
+            'images' => ['required', 'array', 'min:1'],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:30720'],
         ]);
 
-        $image = $this->compressor->process($request->file('file'));
+        $next = ($session->blessingImages()->max('sort_order') ?? 0) + 1;
 
-        FileStore::delete($session->blessings_path);
-        $session->update([
-            'blessings_path' => FileStore::put(
-                $this->key($session, 'blessings', $image['extension']),
-                $image['contents'],
-                $image['mime']
-            ),
-        ]);
+        foreach ($request->file('images') as $image) {
+            $processed = $this->compressor->process($image);
+            $session->blessingImages()->create([
+                'image_path' => FileStore::put(
+                    $this->key($session, 'blessings', $processed['extension']),
+                    $processed['contents'],
+                    $processed['mime']
+                ),
+                'sort_order' => $next++,
+            ]);
+        }
 
         return back()->with('success', "Our Father's Blessing uploaded.");
     }
 
-    public function deleteBlessings(ProgramSession $session): RedirectResponse
+    public function deleteBlessing(ProgramSession $session, BlessingImage $blessing): RedirectResponse
     {
-        FileStore::delete($session->blessings_path);
-        $session->update(['blessings_path' => null]);
+        abort_unless((int) $blessing->program_session_id === (int) $session->id, 404);
+
+        FileStore::delete($blessing->image_path);
+        $blessing->delete();
 
         return back()->with('success', "Our Father's Blessing removed.");
     }

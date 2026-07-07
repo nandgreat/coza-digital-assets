@@ -99,8 +99,9 @@ In the admin you can:
 - Create/delete **Service Types**, **Programs**, and **Program Sessions**
 - Per session, upload:
   - **Sermon Notes** — a single PDF
-  - **Our Father's Blessing** — a single image
-  - **Sermon Quotes** — multiple images (shown in the public gallery)
+  - **Our Father's Blessing** — multiple images (shown in a public gallery)
+  - **Sermon Quotes** — multiple images (shown in a public gallery)
+  - **7DG Prophecies** — multiple images (shown in a public gallery)
 
 To change the admin password, edit `ADMIN_PASSWORD` in `.env` (must be exactly 64 characters) and run `php artisan config:clear`.
 

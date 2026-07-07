@@ -34,6 +34,11 @@ class ProgramSession extends Model
         return $this->hasMany(ProphecyImage::class)->orderBy('sort_order');
     }
 
+    public function blessingImages(): HasMany
+    {
+        return $this->hasMany(BlessingImage::class)->orderBy('sort_order');
+    }
+
     /** e.g. "28th June, 2026" */
     public function getDateLabelAttribute(): ?string
     {
