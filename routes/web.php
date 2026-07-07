@@ -18,6 +18,12 @@ Route::get('/sessions/{session}', [SiteController::class, 'session'])->name('ses
 Route::get('/sessions/{session}/quotes', [SiteController::class, 'quotes'])->name('sessions.quotes');
 Route::get('/sessions/{session}/prophecies', [SiteController::class, 'prophecies'])->name('sessions.prophecies');
 
+// Forced-download endpoints (stream files as attachments, same-origin)
+Route::get('/sessions/{session}/sermon-notes/download', [SiteController::class, 'downloadSermonNotes'])->name('sessions.download.notes');
+Route::get('/sessions/{session}/blessings/download', [SiteController::class, 'downloadBlessings'])->name('sessions.download.blessings');
+Route::get('/sessions/{session}/quotes/{quote}/download', [SiteController::class, 'downloadQuote'])->name('sessions.download.quote');
+Route::get('/sessions/{session}/prophecies/{prophecy}/download', [SiteController::class, 'downloadProphecy'])->name('sessions.download.prophecy');
+
 /*
 | Admin authentication
 */

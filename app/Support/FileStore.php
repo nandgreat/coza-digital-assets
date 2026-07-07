@@ -4,6 +4,7 @@ namespace App\Support;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Central place for deciding where uploaded files live and how to link to them.
@@ -78,5 +79,34 @@ class FileStore
         }
 
         return asset($reference);
+    }
+
+    /**
+     * Stream a stored file to the browser as an attachment (forces a download),
+     * regardless of whether it lives on Backblaze, the local disk, or in public/.
+     */
+    public static function download(?string $reference, string $downloadName): Response
+    {
+        abort_if($reference === null, 404);
+
+        if (Str::startsWith($reference, self::B2_PREFIX)) {
+            return Storage::disk('b2')->download(Str::after($reference, self::B2_PREFIX), $downloadName);
+        }
+
+        if (Str::startsWith($reference, 'storage/')) {
+            return Storage::disk('public')->download(Str::after($reference, 'storage/'), $downloadName);
+        }
+
+        // Legacy seed files bundled under public/
+        $path = public_path($reference);
+        abort_unless(is_file($path), 404);
+
+        return response()->download($path, $downloadName);
+    }
+
+    /** Lowercase file extension of a stored reference (e.g. "jpg", "pdf"). */
+    public static function extension(?string $reference): string
+    {
+        return strtolower(pathinfo((string) $reference, PATHINFO_EXTENSION)) ?: 'dat';
     }
 }

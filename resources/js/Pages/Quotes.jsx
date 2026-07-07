@@ -56,8 +56,7 @@ export default function Quotes({ session, quotes }) {
                             <div className="quote-actions">
                                 <a
                                     className="action-btn"
-                                    href={quote.url}
-                                    download={quote.downloadName}
+                                    href={quote.downloadUrl ?? quote.url}
                                     onClick={() =>
                                         trackDownload({
                                             assetType: 'quote',

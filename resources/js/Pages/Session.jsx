@@ -28,8 +28,7 @@ export default function Session({ session, resources }) {
                         {resource.type === 'download' ? (
                             <a
                                 className="action-btn"
-                                href={resource.url}
-                                download
+                                href={resource.downloadUrl ?? resource.url}
                                 onClick={() =>
                                     trackDownload({
                                         assetType: resource.assetType,

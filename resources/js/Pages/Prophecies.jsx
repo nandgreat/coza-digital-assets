@@ -56,8 +56,7 @@ export default function Prophecies({ session, prophecies }) {
                             <div className="quote-actions">
                                 <a
                                     className="action-btn"
-                                    href={prophecy.url}
-                                    download={prophecy.downloadName}
+                                    href={prophecy.downloadUrl ?? prophecy.url}
                                     onClick={() =>
                                         trackDownload({
                                             assetType: 'prophecy',

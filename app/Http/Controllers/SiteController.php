@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Program;
 use App\Models\ProgramSession;
+use App\Models\ProphecyImage;
+use App\Models\QuoteImage;
 use App\Models\ServiceType;
 use App\Support\FileStore;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class SiteController extends Controller
 {
@@ -83,6 +86,7 @@ class SiteController extends Controller
                 'description' => "Full written notes from today's message",
                 'icon' => '📖',
                 'url' => FileStore::url($session->sermon_notes_path),
+                'downloadUrl' => route('sessions.download.notes', $session),
             ];
         }
 
@@ -94,6 +98,7 @@ class SiteController extends Controller
                 'description' => 'Declarations and blessings from the service',
                 'icon' => '🙏',
                 'url' => FileStore::url($session->blessings_path),
+                'downloadUrl' => route('sessions.download.blessings', $session),
             ];
         }
 
@@ -132,6 +137,7 @@ class SiteController extends Controller
             'quotes' => $session->quoteImages->values()
                 ->map(fn ($quote, $index) => [
                     'url' => FileStore::url($quote->image_path),
+                    'downloadUrl' => route('sessions.download.quote', [$session, $quote->id]),
                     'title' => 'Sermon Quote '.($index + 1),
                     'downloadName' => 'coza-quote-'.($index + 1).'.jpeg',
                 ]),
@@ -147,10 +153,47 @@ class SiteController extends Controller
             'prophecies' => $session->prophecyImages->values()
                 ->map(fn ($prophecy, $index) => [
                     'url' => FileStore::url($prophecy->image_path),
+                    'downloadUrl' => route('sessions.download.prophecy', [$session, $prophecy->id]),
                     'title' => '7DG Prophecy '.($index + 1),
                     'downloadName' => 'coza-prophecy-'.($index + 1).'.jpeg',
                 ]),
         ]);
+    }
+
+    public function downloadSermonNotes(ProgramSession $session): HttpResponse
+    {
+        return FileStore::download(
+            $session->sermon_notes_path,
+            "{$session->slug}-sermon-notes.".FileStore::extension($session->sermon_notes_path)
+        );
+    }
+
+    public function downloadBlessings(ProgramSession $session): HttpResponse
+    {
+        return FileStore::download(
+            $session->blessings_path,
+            "{$session->slug}-blessing.".FileStore::extension($session->blessings_path)
+        );
+    }
+
+    public function downloadQuote(ProgramSession $session, QuoteImage $quote): HttpResponse
+    {
+        abort_unless((int) $quote->program_session_id === (int) $session->id, 404);
+
+        return FileStore::download(
+            $quote->image_path,
+            "{$session->slug}-quote-{$quote->id}.".FileStore::extension($quote->image_path)
+        );
+    }
+
+    public function downloadProphecy(ProgramSession $session, ProphecyImage $prophecy): HttpResponse
+    {
+        abort_unless((int) $prophecy->program_session_id === (int) $session->id, 404);
+
+        return FileStore::download(
+            $prophecy->image_path,
+            "{$session->slug}-prophecy-{$prophecy->id}.".FileStore::extension($prophecy->image_path)
+        );
     }
 
     private function sessionPayload(ProgramSession $session): array
