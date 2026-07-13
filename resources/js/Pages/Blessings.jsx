@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import Layout from '../Components/Layout';
 import { trackDownload } from '../analytics';
+import { shareImage } from '../share';
 
 export default function Blessings({ session, blessings }) {
     const [lightboxSrc, setLightboxSrc] = useState(null);
@@ -18,23 +19,17 @@ export default function Blessings({ session, blessings }) {
         setTimeout(() => setToast(null), 2200);
     }
 
-    async function share(blessing) {
-        if (navigator.share) {
-            try {
-                await navigator.share({ title: blessing.title, text: blessing.title, url: blessing.url });
-            } catch {
-                // user cancelled share — no action needed
-            }
-        } else if (navigator.clipboard) {
-            try {
-                await navigator.clipboard.writeText(blessing.url);
-                showToast('Link copied to clipboard');
-            } catch {
-                showToast('Unable to copy link');
-            }
-        } else {
-            showToast('Sharing not supported on this browser');
-        }
+    function share(blessing) {
+        shareImage(blessing, {
+            onToast: showToast,
+            context: {
+                assetType: 'blessing',
+                assetTitle: blessing.title,
+                serviceType: session.serviceType,
+                program: session.program.name,
+                session: session.name,
+            },
+        });
     }
 
     return (

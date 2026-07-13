@@ -21,3 +21,18 @@ export function trackDownload({ assetType, assetTitle, serviceType, program, ses
         session,
     });
 }
+
+/**
+ * Track an asset share. `method` is how it was shared
+ * (image | link | copy).
+ */
+export function trackShare({ assetType, assetTitle, serviceType, program, session, method }) {
+    trackEvent('asset_share', {
+        asset_type: assetType,
+        asset_title: assetTitle,
+        service_type: serviceType,
+        program,
+        session,
+        share_method: method,
+    });
+}

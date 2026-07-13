@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import Layout from '../Components/Layout';
 import { trackDownload } from '../analytics';
+import { shareImage } from '../share';
 
 export default function Quotes({ session, quotes }) {
     const [lightboxSrc, setLightboxSrc] = useState(null);
@@ -18,23 +19,17 @@ export default function Quotes({ session, quotes }) {
         setTimeout(() => setToast(null), 2200);
     }
 
-    async function share(quote) {
-        if (navigator.share) {
-            try {
-                await navigator.share({ title: quote.title, text: quote.title, url: quote.url });
-            } catch {
-                // user cancelled share — no action needed
-            }
-        } else if (navigator.clipboard) {
-            try {
-                await navigator.clipboard.writeText(quote.url);
-                showToast('Link copied to clipboard');
-            } catch {
-                showToast('Unable to copy link');
-            }
-        } else {
-            showToast('Sharing not supported on this browser');
-        }
+    function share(quote) {
+        shareImage(quote, {
+            onToast: showToast,
+            context: {
+                assetType: 'quote',
+                assetTitle: quote.title,
+                serviceType: session.serviceType,
+                program: session.program.name,
+                session: session.name,
+            },
+        });
     }
 
     return (

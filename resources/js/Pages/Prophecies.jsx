@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import Layout from '../Components/Layout';
 import { trackDownload } from '../analytics';
+import { shareImage } from '../share';
 
 export default function Prophecies({ session, prophecies }) {
     const [lightboxSrc, setLightboxSrc] = useState(null);
@@ -18,23 +19,17 @@ export default function Prophecies({ session, prophecies }) {
         setTimeout(() => setToast(null), 2200);
     }
 
-    async function share(prophecy) {
-        if (navigator.share) {
-            try {
-                await navigator.share({ title: prophecy.title, text: prophecy.title, url: prophecy.url });
-            } catch {
-                // user cancelled share — no action needed
-            }
-        } else if (navigator.clipboard) {
-            try {
-                await navigator.clipboard.writeText(prophecy.url);
-                showToast('Link copied to clipboard');
-            } catch {
-                showToast('Unable to copy link');
-            }
-        } else {
-            showToast('Sharing not supported on this browser');
-        }
+    function share(prophecy) {
+        shareImage(prophecy, {
+            onToast: showToast,
+            context: {
+                assetType: 'prophecy',
+                assetTitle: prophecy.title,
+                serviceType: session.serviceType,
+                program: session.program.name,
+                session: session.name,
+            },
+        });
     }
 
     return (
