@@ -19,7 +19,7 @@ class SiteController extends Controller
     {
         return Inertia::render('Home', [
             'serviceTypes' => ServiceType::orderBy('sort_order')->get()
-                ->map(fn (ServiceType $type) => [
+                ->map(fn(ServiceType $type) => [
                     'slug' => $type->slug,
                     'name' => $type->name,
                     'subtitle' => $type->subtitle,
@@ -37,7 +37,7 @@ class SiteController extends Controller
                 'icon' => $serviceType->icon,
             ],
             'programs' => $serviceType->programs()->withCount('sessions')->get()
-                ->map(fn (Program $program) => [
+                ->map(fn(Program $program) => [
                     'slug' => $program->slug,
                     'name' => $program->name,
                     'subtitle' => $program->subtitle,
@@ -60,8 +60,8 @@ class SiteController extends Controller
                     'pageTitle' => $program->serviceType->edition_label ?? $program->serviceType->name,
                 ],
             ],
-            'sessions' => $program->sessions()->get()
-                ->map(fn (ProgramSession $session) => [
+            'sessions' => $program->sessions()->orderByDesc('session_date')->get()
+                ->map(fn(ProgramSession $session) => [
                     'slug' => $session->slug,
                     'name' => $session->name,
                     'subtitle' => $session->subtitle,
@@ -134,11 +134,11 @@ class SiteController extends Controller
         return Inertia::render('Blessings', [
             'session' => $this->sessionPayload($session),
             'blessings' => $session->blessingImages->values()
-                ->map(fn ($blessing, $index) => [
+                ->map(fn($blessing, $index) => [
                     'url' => FileStore::url($blessing->image_path),
                     'downloadUrl' => route('sessions.download.blessing', [$session, $blessing->id]),
-                    'title' => "Our Father's Blessing ".($index + 1),
-                    'downloadName' => 'coza-blessing-'.($index + 1).'.jpeg',
+                    'title' => "Our Father's Blessing " . ($index + 1),
+                    'downloadName' => 'coza-blessing-' . ($index + 1) . '.jpeg',
                 ]),
         ]);
     }
@@ -150,11 +150,11 @@ class SiteController extends Controller
         return Inertia::render('Quotes', [
             'session' => $this->sessionPayload($session),
             'quotes' => $session->quoteImages->values()
-                ->map(fn ($quote, $index) => [
+                ->map(fn($quote, $index) => [
                     'url' => FileStore::url($quote->image_path),
                     'downloadUrl' => route('sessions.download.quote', [$session, $quote->id]),
-                    'title' => 'Sermon Quote '.($index + 1),
-                    'downloadName' => 'coza-quote-'.($index + 1).'.jpeg',
+                    'title' => 'Sermon Quote ' . ($index + 1),
+                    'downloadName' => 'coza-quote-' . ($index + 1) . '.jpeg',
                 ]),
         ]);
     }
@@ -166,11 +166,11 @@ class SiteController extends Controller
         return Inertia::render('Prophecies', [
             'session' => $this->sessionPayload($session),
             'prophecies' => $session->prophecyImages->values()
-                ->map(fn ($prophecy, $index) => [
+                ->map(fn($prophecy, $index) => [
                     'url' => FileStore::url($prophecy->image_path),
                     'downloadUrl' => route('sessions.download.prophecy', [$session, $prophecy->id]),
-                    'title' => '7DG Prophecy '.($index + 1),
-                    'downloadName' => 'coza-prophecy-'.($index + 1).'.jpeg',
+                    'title' => '7DG Prophecy ' . ($index + 1),
+                    'downloadName' => 'coza-prophecy-' . ($index + 1) . '.jpeg',
                 ]),
         ]);
     }
@@ -179,7 +179,7 @@ class SiteController extends Controller
     {
         return FileStore::download(
             $session->sermon_notes_path,
-            "{$session->slug}-sermon-notes.".FileStore::extension($session->sermon_notes_path)
+            "{$session->slug}-sermon-notes." . FileStore::extension($session->sermon_notes_path)
         );
     }
 
@@ -189,7 +189,7 @@ class SiteController extends Controller
 
         return FileStore::download(
             $blessing->image_path,
-            "{$session->slug}-blessing-{$blessing->id}.".FileStore::extension($blessing->image_path)
+            "{$session->slug}-blessing-{$blessing->id}." . FileStore::extension($blessing->image_path)
         );
     }
 
@@ -199,7 +199,7 @@ class SiteController extends Controller
 
         return FileStore::download(
             $quote->image_path,
-            "{$session->slug}-quote-{$quote->id}.".FileStore::extension($quote->image_path)
+            "{$session->slug}-quote-{$quote->id}." . FileStore::extension($quote->image_path)
         );
     }
 
@@ -209,7 +209,7 @@ class SiteController extends Controller
 
         return FileStore::download(
             $prophecy->image_path,
-            "{$session->slug}-prophecy-{$prophecy->id}.".FileStore::extension($prophecy->image_path)
+            "{$session->slug}-prophecy-{$prophecy->id}." . FileStore::extension($prophecy->image_path)
         );
     }
 
