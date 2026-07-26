@@ -51,10 +51,6 @@ class SiteController extends Controller
     {
         $program->load('serviceType');
 
-        $sessions = $program->sessions()
-            ->orderBy('session_date', 'desc')
-            ->get();
-
         return Inertia::render('Program', [
             'program' => [
                 'name' => $program->name,
@@ -64,15 +60,16 @@ class SiteController extends Controller
                     'pageTitle' => $program->serviceType->edition_label ?? $program->serviceType->name,
                 ],
             ],
-            'sessions' => $sessions->map(fn(ProgramSession $session) => [
-                'slug' => $session->slug,
-                'name' => $session->name,
-                'subtitle' => $session->subtitle,
-                'dayLabel' => $session->day_label,
-                'dateLabel' => $session->date_label,
-                'minister' => $session->minister,
-                'icon' => $session->icon,
-            ]),
+            'sessions' => $program->sessions()->get()
+                ->map(fn(ProgramSession $session) => [
+                    'slug' => $session->slug,
+                    'name' => $session->name,
+                    'subtitle' => $session->subtitle,
+                    'dayLabel' => $session->day_label,
+                    'dateLabel' => $session->date_label,
+                    'minister' => $session->minister,
+                    'icon' => $session->icon,
+                ]),
         ]);
     }
 
