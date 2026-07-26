@@ -17,6 +17,13 @@ class SiteController extends Controller
 {
     public function home(): Response
     {
+        // Latest session: most recent by service date, falling back to when it
+        // was added (so undated sessions are still ranked sensibly).
+        $latest = ProgramSession::with('program.serviceType')
+            ->orderByRaw('COALESCE(session_date, created_at) DESC')
+            ->orderByDesc('id')
+            ->first();
+
         return Inertia::render('Home', [
             'serviceTypes' => ServiceType::orderBy('sort_order')->get()
                 ->map(fn(ServiceType $type) => [
@@ -25,6 +32,18 @@ class SiteController extends Controller
                     'subtitle' => $type->subtitle,
                     'icon' => $type->icon,
                 ]),
+            'latestSession' => $latest ? [
+                'slug' => $latest->slug,
+                'name' => $latest->name,
+                'subtitle' => $latest->subtitle,
+                'dayLabel' => $latest->day_label,
+                'dateLabel' => $latest->date_label,
+                'minister' => $latest->minister,
+                'icon' => $latest->icon,
+                'editionTag' => $latest->edition_tag,
+                'serviceType' => $latest->program->serviceType->name,
+                'program' => $latest->program->name,
+            ] : null,
         ]);
     }
 
