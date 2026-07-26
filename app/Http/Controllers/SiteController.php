@@ -53,14 +53,14 @@ class SiteController extends Controller
 
         return Inertia::render('Program', [
             'program' => [
-                'name' => $program->name,
+                'name' => $program->name . ' good',
                 'subtitle' => $program->subtitle,
                 'serviceType' => [
                     'slug' => $program->serviceType->slug,
                     'pageTitle' => $program->serviceType->edition_label ?? $program->serviceType->name,
                 ],
             ],
-            'sessions' => $program->sessions()->orderByDesc('sort_order')->get()
+            'sessions' => $program->sessions()->orderByDesc('session_date')->get()
                 ->map(fn(ProgramSession $session) => [
                     'slug' => $session->slug,
                     'name' => $session->name,
