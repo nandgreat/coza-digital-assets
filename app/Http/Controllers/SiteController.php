@@ -60,7 +60,7 @@ class SiteController extends Controller
                     'pageTitle' => $program->serviceType->edition_label ?? $program->serviceType->name,
                 ],
             ],
-            'sessions' => $program->sessions()->orderByDesc('session_date')->get()
+            'sessions' => $program->sessions()->orderByDesc('session_date')->orderByDesc('created_at')->get()
                 ->map(fn(ProgramSession $session) => [
                     'slug' => $session->slug,
                     'name' => $session->name,
