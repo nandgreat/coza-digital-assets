@@ -22,6 +22,6 @@ class Program extends Model
 
     public function sessions(): HasMany
     {
-        return $this->hasMany(ProgramSession::class)->orderBy('sort_order');
+        return $this->hasMany(ProgramSession::class)->orderBy('session_date', 'desc');
     }
 }
