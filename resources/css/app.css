@@ -99,7 +99,7 @@ h1.brand {
 /* ── Latest Service (home) ── */
 .latest-service {
   width: 100%;
-  max-width: 720px;
+  max-width: 780px;
   margin: 10px auto 0;
 }
 
@@ -113,6 +113,7 @@ h1.brand {
 }
 
 .latest-service .service-item {
+  max-width: none;
   border-color: rgba(212, 175, 55, 0.4);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
