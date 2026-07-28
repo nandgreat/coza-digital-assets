@@ -414,10 +414,30 @@ h1.brand {
 }
 
 /* ── Quotes Gallery ── */
+.gallery-actions {
+  width: 100%;
+  max-width: 1080px;
+  margin: 28px auto 0;
+  display: flex;
+  justify-content: center;
+}
+
+.gallery-actions .arrow-btn {
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 12px 26px;
+}
+
+.gallery-actions .arrow-btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
 .gallery {
   width: 100%;
   max-width: 1080px;
-  margin-top: 36px;
+  margin-top: 24px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 24px;

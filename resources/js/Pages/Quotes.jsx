@@ -1,12 +1,14 @@
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import Layout from '../Components/Layout';
-import { trackDownload } from '../analytics';
+import { trackDownload, trackEvent } from '../analytics';
 import { shareImage } from '../share';
+import { downloadAll } from '../bulkDownload';
 
 export default function Quotes({ session, quotes }) {
     const [lightboxSrc, setLightboxSrc] = useState(null);
     const [toast, setToast] = useState(null);
+    const [bulk, setBulk] = useState({ active: false, done: 0, total: 0 });
 
     const contextParts = [
         session.editionTag ? session.editionTag : session.program.name,
@@ -32,6 +34,23 @@ export default function Quotes({ session, quotes }) {
         });
     }
 
+    async function handleDownloadAll() {
+        if (bulk.active || quotes.length === 0) return;
+        setBulk({ active: true, done: 0, total: quotes.length });
+        await downloadAll(quotes, {
+            onProgress: (done, total) => setBulk({ active: true, done, total }),
+        });
+        setBulk({ active: false, done: 0, total: 0 });
+        showToast('All quotes downloaded');
+        trackEvent('asset_download_all', {
+            asset_type: 'quote',
+            count: quotes.length,
+            service_type: session.serviceType,
+            program: session.program.name,
+            session: session.name,
+        });
+    }
+
     return (
         <Layout
             backHref={`/sessions/${session.slug}`}
@@ -42,8 +61,16 @@ export default function Quotes({ session, quotes }) {
             <Head title="Sermon Quotes" />
 
             {quotes.length > 0 ? (
-                <main className="gallery">
-                    {quotes.map((quote) => (
+                <>
+                    <div className="gallery-actions">
+                        <button className="arrow-btn" onClick={handleDownloadAll} disabled={bulk.active}>
+                            {bulk.active
+                                ? `Downloading ${bulk.done}/${bulk.total}…`
+                                : `⬇ Download All (${quotes.length})`}
+                        </button>
+                    </div>
+                    <main className="gallery">
+                        {quotes.map((quote) => (
                         <div className="quote-card" key={quote.url}>
                             <div className="quote-image-wrap" onClick={() => setLightboxSrc(quote.url)}>
                                 <img src={quote.url} alt={quote.title} loading="lazy" />
@@ -67,10 +94,11 @@ export default function Quotes({ session, quotes }) {
                                 <button className="action-btn share-btn" onClick={() => share(quote)}>
                                     ↗ Share
                                 </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </main>
+                        ))}
+                    </main>
+                </>
             ) : (
                 <div className="empty-state">
                     <span className="flame">🔥</span>
