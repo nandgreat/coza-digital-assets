@@ -140,9 +140,26 @@ class SiteController extends Controller
             ];
         }
 
+        // Flat list of every downloadable file for "Download all service assets".
+        $downloads = [];
+
+        if ($session->sermon_notes_path) {
+            $downloads[] = ['downloadUrl' => route('sessions.download.notes', $session)];
+        }
+        foreach ($session->blessingImages as $blessing) {
+            $downloads[] = ['downloadUrl' => route('sessions.download.blessing', [$session, $blessing->id])];
+        }
+        foreach ($session->quoteImages as $quote) {
+            $downloads[] = ['downloadUrl' => route('sessions.download.quote', [$session, $quote->id])];
+        }
+        foreach ($session->prophecyImages as $prophecy) {
+            $downloads[] = ['downloadUrl' => route('sessions.download.prophecy', [$session, $prophecy->id])];
+        }
+
         return Inertia::render('Session', [
             'session' => $this->sessionPayload($session),
             'resources' => $resources,
+            'downloads' => $downloads,
         ]);
     }
 

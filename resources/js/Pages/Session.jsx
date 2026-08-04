@@ -1,8 +1,34 @@
 import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
 import Layout from '../Components/Layout';
-import { trackDownload } from '../analytics';
+import { trackDownload, trackEvent } from '../analytics';
+import { downloadAll } from '../bulkDownload';
 
-export default function Session({ session, resources }) {
+export default function Session({ session, resources, downloads }) {
+    const [bulk, setBulk] = useState({ active: false, done: 0, total: 0 });
+    const [toast, setToast] = useState(null);
+
+    function showToast(message) {
+        setToast(message);
+        setTimeout(() => setToast(null), 2600);
+    }
+
+    async function handleDownloadAll() {
+        if (bulk.active || !downloads || downloads.length === 0) return;
+        setBulk({ active: true, done: 0, total: downloads.length });
+        await downloadAll(downloads, {
+            onProgress: (done, total) => setBulk({ active: true, done, total }),
+        });
+        setBulk({ active: false, done: 0, total: 0 });
+        showToast('All service assets downloaded');
+        trackEvent('assets_download_all', {
+            count: downloads.length,
+            service_type: session.serviceType,
+            program: session.program.name,
+            session: session.name,
+        });
+    }
+
     return (
         <Layout backHref={`/programs/${session.program.slug}`} backLabel={`Back to ${session.program.name}`}>
             <Head title={session.name} />
@@ -14,6 +40,16 @@ export default function Session({ session, resources }) {
                 {session.subtitle && <div className="service-sub">{session.subtitle}</div>}
                 {session.minister && <div className="minister">Ministering: {session.minister}</div>}
             </div>
+
+            {downloads && downloads.length > 0 && (
+                <div className="download-all-bar">
+                    <button className="arrow-btn" onClick={handleDownloadAll} disabled={bulk.active}>
+                        {bulk.active
+                            ? `Downloading ${bulk.done}/${bulk.total}…`
+                            : `⬇ Download All Service Assets (${downloads.length})`}
+                    </button>
+                </div>
+            )}
 
             <main className="resources">
                 {resources.map((resource) => (
@@ -56,6 +92,8 @@ export default function Session({ session, resources }) {
                     </div>
                 )}
             </main>
+
+            <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
         </Layout>
     );
 }
