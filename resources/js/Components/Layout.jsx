@@ -10,9 +10,13 @@ export default function Layout({ backHref, backLabel, tagline = 'Digital Service
             )}
 
             <header>
-                <div className="logo-badge">
-                    <img src="/images/coza_logo.png" alt="COZA Logo" />
+                <div className="logo-row">
+                    <img className="coza-badge" src="/images/coza_logo.png" alt="COZA" />
+                    <div className="logo-badge">
+                        <img src="/images/cgls_logo.png" alt="COZAGlobal Leadership Summit" />
+                    </div>
                 </div>
+                <div className="cgls-stripe" />
                 <h1 className="brand">COZA</h1>
                 <div className="tagline">{tagline}</div>
                 {headerExtra}
