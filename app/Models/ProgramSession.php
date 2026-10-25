@@ -24,6 +24,11 @@ class ProgramSession extends Model
         return $this->belongsTo(Program::class);
     }
 
+    public function sermonNotes(): HasMany
+    {
+        return $this->hasMany(SermonNote::class)->orderBy('sort_order');
+    }
+
     public function quoteImages(): HasMany
     {
         return $this->hasMany(QuoteImage::class)->orderBy('sort_order');

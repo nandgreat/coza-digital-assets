@@ -20,7 +20,7 @@ Route::get('/sessions/{session}/quotes', [SiteController::class, 'quotes'])->nam
 Route::get('/sessions/{session}/prophecies', [SiteController::class, 'prophecies'])->name('sessions.prophecies');
 
 // Forced-download endpoints (stream files as attachments, same-origin)
-Route::get('/sessions/{session}/sermon-notes/download', [SiteController::class, 'downloadSermonNotes'])->name('sessions.download.notes');
+Route::get('/sessions/{session}/sermon-notes/{note}/download', [SiteController::class, 'downloadSermonNote'])->name('sessions.download.note');
 Route::get('/sessions/{session}/blessings/{blessing}/download', [SiteController::class, 'downloadBlessing'])->name('sessions.download.blessing');
 Route::get('/sessions/{session}/quotes/{quote}/download', [SiteController::class, 'downloadQuote'])->name('sessions.download.quote');
 Route::get('/sessions/{session}/prophecies/{prophecy}/download', [SiteController::class, 'downloadProphecy'])->name('sessions.download.prophecy');
@@ -55,7 +55,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('sessions/{session}', [SessionController::class, 'destroy'])->name('sessions.destroy');
 
     Route::post('sessions/{session}/sermon-notes', [SessionController::class, 'uploadSermonNotes'])->name('sessions.sermon-notes.store');
-    Route::delete('sessions/{session}/sermon-notes', [SessionController::class, 'deleteSermonNotes'])->name('sessions.sermon-notes.destroy');
+    Route::delete('sessions/{session}/sermon-notes/{note}', [SessionController::class, 'deleteSermonNote'])->name('sessions.sermon-notes.destroy');
 
     Route::post('sessions/{session}/blessings', [SessionController::class, 'uploadBlessings'])->name('sessions.blessings.store');
     Route::delete('sessions/{session}/blessings/{blessing}', [SessionController::class, 'deleteBlessing'])->name('sessions.blessings.destroy');

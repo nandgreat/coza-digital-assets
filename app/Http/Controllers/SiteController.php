@@ -7,6 +7,7 @@ use App\Models\Program;
 use App\Models\ProgramSession;
 use App\Models\ProphecyImage;
 use App\Models\QuoteImage;
+use App\Models\SermonNote;
 use App\Models\ServiceType;
 use App\Support\FileStore;
 use Inertia\Inertia;
@@ -94,19 +95,19 @@ class SiteController extends Controller
 
     public function session(ProgramSession $session): Response
     {
-        $session->load(['program.serviceType', 'blessingImages', 'quoteImages', 'prophecyImages']);
+        $session->load(['program.serviceType', 'sermonNotes', 'blessingImages', 'quoteImages', 'prophecyImages']);
 
         $resources = [];
 
-        if ($session->sermon_notes_path) {
+        $notesCount = $session->sermonNotes->count();
+        foreach ($session->sermonNotes->values() as $index => $note) {
             $resources[] = [
                 'type' => 'download',
                 'assetType' => 'sermon_notes',
-                'title' => 'Sermon Notes',
-                'description' => "Full written notes from today's message",
+                'title' => $notesCount > 1 ? 'Sermon Notes ' . ($index + 1) : 'Sermon Notes',
+                'description' => $note->original_name ?: "Full written notes from today's message",
                 'icon' => '📖',
-                'url' => FileStore::url($session->sermon_notes_path),
-                'downloadUrl' => route('sessions.download.notes', $session),
+                'downloadUrl' => route('sessions.download.note', [$session, $note->id]),
             ];
         }
 
@@ -143,8 +144,8 @@ class SiteController extends Controller
         // Flat list of every downloadable file for "Download all service assets".
         $downloads = [];
 
-        if ($session->sermon_notes_path) {
-            $downloads[] = ['downloadUrl' => route('sessions.download.notes', $session)];
+        foreach ($session->sermonNotes as $note) {
+            $downloads[] = ['downloadUrl' => route('sessions.download.note', [$session, $note->id])];
         }
         foreach ($session->blessingImages as $blessing) {
             $downloads[] = ['downloadUrl' => route('sessions.download.blessing', [$session, $blessing->id])];
@@ -211,11 +212,13 @@ class SiteController extends Controller
         ]);
     }
 
-    public function downloadSermonNotes(ProgramSession $session): HttpResponse
+    public function downloadSermonNote(ProgramSession $session, SermonNote $note): HttpResponse
     {
+        abort_unless((int) $note->program_session_id === (int) $session->id, 404);
+
         return FileStore::download(
-            $session->sermon_notes_path,
-            "{$session->slug}-sermon-notes." . FileStore::extension($session->sermon_notes_path)
+            $note->file_path,
+            "{$session->slug}-sermon-notes-{$note->id}." . FileStore::extension($note->file_path)
         );
     }
 

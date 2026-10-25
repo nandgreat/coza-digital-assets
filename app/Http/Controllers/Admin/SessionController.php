@@ -8,6 +8,7 @@ use App\Models\Program;
 use App\Models\ProgramSession;
 use App\Models\ProphecyImage;
 use App\Models\QuoteImage;
+use App\Models\SermonNote;
 use App\Services\ImageCompressor;
 use App\Support\FileStore;
 use Illuminate\Http\RedirectResponse;
@@ -55,7 +56,7 @@ class SessionController extends Controller
 
     public function edit(ProgramSession $session): Response
     {
-        $session->load(['program.serviceType', 'quoteImages', 'prophecyImages', 'blessingImages']);
+        $session->load(['program.serviceType', 'sermonNotes', 'quoteImages', 'prophecyImages', 'blessingImages']);
 
         return Inertia::render('Admin/Session', [
             'session' => [
@@ -67,7 +68,11 @@ class SessionController extends Controller
                 'sessionDate' => $session->session_date?->format('Y-m-d'),
                 'minister' => $session->minister,
                 'icon' => $session->icon,
-                'sermonNotesUrl' => FileStore::url($session->sermon_notes_path),
+                'sermonNotes' => $session->sermonNotes->map(fn (SermonNote $n) => [
+                    'id' => $n->id,
+                    'url' => FileStore::url($n->file_path),
+                    'name' => $n->original_name,
+                ]),
                 'blessings' => $session->blessingImages->map(fn (BlessingImage $b) => [
                     'id' => $b->id,
                     'url' => FileStore::url($b->image_path),
@@ -114,7 +119,9 @@ class SessionController extends Controller
 
     public function destroy(ProgramSession $session): RedirectResponse
     {
-        FileStore::delete($session->sermon_notes_path);
+        foreach ($session->sermonNotes as $note) {
+            FileStore::delete($note->file_path);
+        }
         foreach ($session->blessingImages as $blessing) {
             FileStore::delete($blessing->image_path);
         }
@@ -133,27 +140,33 @@ class SessionController extends Controller
     public function uploadSermonNotes(Request $request, ProgramSession $session): RedirectResponse
     {
         $request->validate([
-            'file' => ['required', 'file', 'mimes:pdf', 'max:20480'],
+            'files' => ['required', 'array', 'min:1'],
+            'files.*' => ['file', 'mimes:pdf', 'max:20480'],
         ]);
 
-        $file = $request->file('file');
+        $next = ($session->sermonNotes()->max('sort_order') ?? 0) + 1;
 
-        FileStore::delete($session->sermon_notes_path);
-        $session->update([
-            'sermon_notes_path' => FileStore::put(
-                $this->key($session, 'notes', 'pdf'),
-                file_get_contents($file->getRealPath()),
-                'application/pdf'
-            ),
-        ]);
+        foreach ($request->file('files') as $file) {
+            $session->sermonNotes()->create([
+                'file_path' => FileStore::put(
+                    $this->key($session, 'notes', 'pdf'),
+                    file_get_contents($file->getRealPath()),
+                    'application/pdf'
+                ),
+                'original_name' => $file->getClientOriginalName(),
+                'sort_order' => $next++,
+            ]);
+        }
 
         return back()->with('success', 'Sermon notes uploaded.');
     }
 
-    public function deleteSermonNotes(ProgramSession $session): RedirectResponse
+    public function deleteSermonNote(ProgramSession $session, SermonNote $note): RedirectResponse
     {
-        FileStore::delete($session->sermon_notes_path);
-        $session->update(['sermon_notes_path' => null]);
+        abort_unless((int) $note->program_session_id === (int) $session->id, 404);
+
+        FileStore::delete($note->file_path);
+        $note->delete();
 
         return back()->with('success', 'Sermon notes removed.');
     }

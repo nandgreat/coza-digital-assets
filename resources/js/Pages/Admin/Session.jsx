@@ -43,15 +43,15 @@ function DetailsForm({ session }) {
     );
 }
 
-function SingleFileSlot({ session, label, hint, accept, kind, currentUrl, isImage }) {
+function SermonNotesSlot({ session }) {
     const inputRef = useRef(null);
-    const { setData, post, processing, errors, progress } = useForm({ file: null });
+    const { setData, post, processing, errors, progress } = useForm({ files: [] });
 
     function upload(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        setData('file', file);
-        post(`/admin/sessions/${session.slug}/${kind}`, {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+        setData('files', files);
+        post(`/admin/sessions/${session.slug}/sermon-notes`, {
             preserveScroll: true,
             forceFormData: true,
             onFinish: () => { if (inputRef.current) inputRef.current.value = ''; },
@@ -61,34 +61,36 @@ function SingleFileSlot({ session, label, hint, accept, kind, currentUrl, isImag
     return (
         <div className="admin-slot">
             <div className="admin-slot-head">
-                <h3>{label}</h3>
-                <p>{hint}</p>
+                <h3>Sermon Notes</h3>
+                <p>Upload one or more PDF files (max 20 MB each).</p>
             </div>
 
-            {currentUrl ? (
-                <div className="admin-slot-current">
-                    {isImage ? (
-                        <img src={currentUrl} alt={label} className="admin-thumb" />
-                    ) : (
-                        <a href={currentUrl} target="_blank" rel="noreferrer" className="admin-filelink">📄 View current file</a>
-                    )}
-                    <button
-                        className="admin-danger"
-                        onClick={() => router.delete(`/admin/sessions/${session.slug}/${kind}`, { preserveScroll: true })}
-                    >
-                        Remove
-                    </button>
+            {session.sermonNotes.length > 0 ? (
+                <div className="admin-file-list">
+                    {session.sermonNotes.map((note, i) => (
+                        <div className="admin-slot-current" key={note.id}>
+                            <a href={note.url} target="_blank" rel="noreferrer" className="admin-filelink">
+                                📄 {note.name || `Sermon notes ${i + 1}`}
+                            </a>
+                            <button
+                                className="admin-danger"
+                                onClick={() => router.delete(`/admin/sessions/${session.slug}/sermon-notes/${note.id}`, { preserveScroll: true })}
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
                 </div>
             ) : (
-                <p className="admin-empty-slot">Nothing uploaded yet.</p>
+                <p className="admin-empty-slot">No sermon notes uploaded yet.</p>
             )}
 
             <label className="arrow-btn small admin-upload-btn">
-                {currentUrl ? 'Replace' : 'Upload'}
-                <input ref={inputRef} type="file" accept={accept} hidden onChange={upload} disabled={processing} />
+                Upload PDFs
+                <input ref={inputRef} type="file" accept="application/pdf" multiple hidden onChange={upload} disabled={processing} />
             </label>
             {progress && <span className="admin-progress">{progress.percentage}%</span>}
-            {errors.file && <span className="admin-error">{errors.file}</span>}
+            {errors.files && <span className="admin-error">{errors.files}</span>}
         </div>
     );
 }
@@ -275,15 +277,7 @@ export default function Session({ session }) {
             <section className="admin-card">
                 <h2 className="admin-card-title">Resources</h2>
                 <div className="admin-slots">
-                    <SingleFileSlot
-                        session={session}
-                        label="Sermon Notes"
-                        hint="A single PDF file (max 20 MB)."
-                        accept="application/pdf"
-                        kind="sermon-notes"
-                        currentUrl={session.sermonNotesUrl}
-                        isImage={false}
-                    />
+                    <SermonNotesSlot session={session} />
                     <BlessingsSlot session={session} />
                     <QuotesSlot session={session} />
                     <PropheciesSlot session={session} />
