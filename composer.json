@@ -7,13 +7,36 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "google/analytics-admin": "^0.34.0",
+        "google/analytics-data": "^0.25.0",
+        "google/apiclient": "^2.20",
+        "google/protobuf": "^5.35",
+        "grpc/grpc": "^1.82",
         "inertiajs/inertia-laravel": "^3.1",
         "intervention/image": "^4.1",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
-        "league/flysystem-aws-s3-v3": "^3.0"
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "symfony/clock": "^7.0",
+        "symfony/console": "^7.0",
+        "symfony/css-selector": "^7.0",
+        "symfony/error-handler": "^7.0",
+        "symfony/event-dispatcher": "^7.0",
+        "symfony/filesystem": "^7.0",
+        "symfony/finder": "^7.0",
+        "symfony/http-foundation": "^7.0",
+        "symfony/http-kernel": "^7.0",
+        "symfony/mailer": "^7.0",
+        "symfony/mime": "^7.0",
+        "symfony/process": "^7.0",
+        "symfony/routing": "^7.0",
+        "symfony/string": "^7.0",
+        "symfony/translation": "^7.0",
+        "symfony/uid": "^7.0",
+        "symfony/var-dumper": "^7.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "*",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
@@ -82,6 +105,13 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "policy": {
+            "advisories": {
+                "ignore-id": {
+                    "PKSA-y2cr-5h3j-g3ys": "firebase/php-jwt - Downgrading to v6 would introduce a vulnerability. Using secure v7.1.0 instead."
+                }
+            }
         }
     },
     "minimum-stability": "stable",

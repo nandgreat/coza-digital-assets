@@ -5,8 +5,12 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\ServiceTypeController;
 use App\Http\Controllers\Admin\SessionController;
+use App\Http\Controllers\Analytics\AnalyticsAuthController;
+use App\Http\Controllers\Analytics\AnalyticsController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AnalyticsAuth;
+use App\Http\Controllers\GoogleAnalyticsController;
 
 /*
 | Public site
@@ -65,4 +69,35 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::post('sessions/{session}/prophecies', [SessionController::class, 'uploadProphecies'])->name('sessions.prophecies.store');
     Route::delete('sessions/{session}/prophecies/{prophecy}', [SessionController::class, 'deleteProphecy'])->name('sessions.prophecies.destroy');
+});
+
+// --- Analytics Standalone Routes ---
+Route::prefix('analytics')->name('analytics.')->group(function () {
+    
+    // Analytics login/logout routes (no auth) | Public facing login routes
+    Route::get('/login', [AnalyticsAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AnalyticsAuthController::class, 'login'])->name('login.attempt');
+    // Check the report status of created GA4 Custom Dimensions
+    Route::get('/{propertyId}/custom-dimensions', [GoogleAnalyticsController::class, 'customDimensionStatuses']);
+    
+    // Protected Dashboard Routes
+    Route::middleware([AnalyticsAuth::class])->group(function () {
+        Route::get('/', [AnalyticsController::class, 'index'])->name('dashboard');
+        Route::get('/filters', [AnalyticsController::class, 'filters'])->name('filters');
+        Route::get('/export', [AnalyticsController::class, 'export'])->name('export');
+        Route::post('/refresh', [AnalyticsController::class, 'refresh'])->name('refresh');
+        Route::get('/refresh-status', [AnalyticsController::class, 'refreshStatus'])->name('refresh-status');
+        Route::get('/breakdown', [AnalyticsController::class, 'breakdown'])->name('breakdown');
+        Route::get('/sessions', [AnalyticsController::class, 'sessions'])->name('sessions');
+        Route::get('/geo', [AnalyticsController::class, 'geo'])->name('geo');
+        Route::get('/unique-by-asset', [AnalyticsController::class, 'uniqueByAsset'])->name('uniqueByAsset');
+        Route::get('/diagnose-google', [AnalyticsController::class, 'diagnoseGoogleAnalytics']);
+        // Compatibility aliases retained while ordinary dashboard reads move to Inertia.
+        Route::get('/analytics', [AnalyticsController::class, 'index'])->name('legacy.page');
+
+        // Canonical JSON contract retained for external/legacy consumers.
+        Route::get('/data', [AnalyticsController::class, 'data'])->name('data');
+
+        Route::post('/logout', [AnalyticsAuthController::class, 'logout'])->name('logout');
+    });
 });

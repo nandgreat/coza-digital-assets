@@ -1,6 +1,33 @@
 {
+  "node_modules/leaflet.heat/dist/leaflet-heat.js": {
+    "file": "assets/leaflet-heat-CYyaQpLZ.js",
+    "name": "leaflet-heat",
+    "src": "node_modules/leaflet.heat/dist/leaflet-heat.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/leaflet/dist/images/layers-2x.png": {
+    "file": "assets/layers-2x-Bpkbi35X.png",
+    "src": "node_modules/leaflet/dist/images/layers-2x.png"
+  },
+  "node_modules/leaflet/dist/images/layers.png": {
+    "file": "assets/layers-BWBAp2CZ.png",
+    "src": "node_modules/leaflet/dist/images/layers.png"
+  },
+  "node_modules/leaflet/dist/images/marker-icon.png": {
+    "file": "assets/marker-icon-hN30_KVU.png",
+    "src": "node_modules/leaflet/dist/images/marker-icon.png"
+  },
+  "resources/css/analyticsDashboard.css": {
+    "file": "assets/analyticsDashboard-DJZ9M_n_.css",
+    "name": "analyticsDashboard",
+    "names": [
+      "analyticsDashboard.css"
+    ],
+    "src": "resources/css/analyticsDashboard.css",
+    "isEntry": true
+  },
   "resources/css/app.css": {
-    "file": "assets/app-CwNiv7aM.css",
+    "file": "assets/app-Cd7yd98l.css",
     "name": "app",
     "names": [
       "app.css"
@@ -9,9 +36,22 @@
     "isEntry": true
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-DI6fL-JV.js",
+    "file": "assets/app-DsoQthMk.js",
     "name": "app",
     "src": "resources/js/app.jsx",
-    "isEntry": true
+    "isEntry": true,
+    "dynamicImports": [
+      "node_modules/leaflet.heat/dist/leaflet-heat.js"
+    ],
+    "css": [
+      "assets/app-CGCV8qOT.css",
+      "assets/app-Cd7yd98l.css",
+      "assets/analyticsDashboard-DJZ9M_n_.css"
+    ],
+    "assets": [
+      "assets/layers-BWBAp2CZ.png",
+      "assets/layers-2x-Bpkbi35X.png",
+      "assets/marker-icon-hN30_KVU.png"
+    ]
   }
 }

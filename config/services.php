@@ -36,8 +36,19 @@ return [
     ],
 
     'google_analytics' => [
-        // GA4 Measurement ID, e.g. G-XXXXXXXXXX. Leave blank to disable tracking.
+        // Google Analytics 4 [GA4] — Measurement ID (e.g. G-XXXXXXXXXX) for the frontend. Leave blank to disable.
         'id' => env('GA_MEASUREMENT_ID'),
+    ],
+
+    'ga4' => [
+        // Backend Google Analytics 4 [GA4] API access
+        'property_id' => env('GA4_PROPERTY_ID'),
+        'service_account_key_path' => base_path(
+            env(
+                'GA4_SERVICE_ACCOUNT_KEY_PATH',
+                // 'storage/app/keys/coza-digital-assets-504808-5d8b9730278d.json'
+            )
+        ),
     ],
 
 ];

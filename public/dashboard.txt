@@ -1,0 +1,330 @@
+/**
+ * ============================================================
+ * Dashboard Page – COZA Analytics (Glass/Dark Theme)
+ * ============================================================
+ *
+ * Clean UI container component utilizing custom hook abstractions
+ * and error boundary isolation.
+ * ============================================================
+ */
+
+import { usePage } from '@inertiajs/react';
+import React from 'react';
+import { Toaster } from 'react-hot-toast';
+import {
+  PieChart,
+  BarChart3,
+  RefreshCw,
+  FileDown,
+  LogOut,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  AlertCircle,
+} from 'lucide-react';
+import AnalyticsDashboardLayout from '../../Layouts/AnalyticsDashboardLayout';
+
+// ─── Hook & Boundaries ─────────────────────────────────────────
+import { useDashboardAnalytics } from '@/hooks/useDashboardAnalytics';
+import { AnalyticsErrorBoundary } from '@/components/Analytics/AnalyticsErrorBoundary';
+
+// ─── Analytics Components ─────────────────────────────────────
+import FilterBar from '@/components/Analytics/FilterBar';
+import KPIStats from '@/components/Analytics/KPIStats';
+import DailyTrendChart from '@/components/Analytics/DailyTrendChart';
+import BreakdownChart from '@/components/Analytics/BreakdownChart';
+import TopSessionsTable from '@/components/Analytics/TopSessionsTable';
+import RefreshIndicator from '@/components/Analytics/RefreshIndicator';
+import AutoRefreshBanner from '@/components/Analytics/AutoRefreshBanner';
+import UniqueUsersTrendChart from '@/components/Analytics/UniqueUsersTrendChart';
+import GeoMap from '@/components/Analytics/GeoMap';
+
+// ─── Skeletons ─────────────────────────────────────────────────
+import KpiSkeleton from '@/components/Analytics/Skeletons/KpiSkeleton';
+import ChartSkeleton from '@/components/Analytics/Skeletons/ChartSkeleton';
+import TableSkeleton from '@/components/Analytics/Skeletons/TableSkeleton';
+
+/**
+ * Main Dashboard presentation layout component.
+ *
+ * @component
+ * @returns {JSX.Element}
+ */
+export default function Dashboard() {
+  const { props: pageProps } = usePage();
+  const { state, actions } = useDashboardAnalytics(pageProps);
+
+  const hasPrev = state.sessionsOffset > 0;
+  const hasNext = state.sessionsOffset + state.sessionsLimit < state.sessionsTotal;
+  const showEmptyState =
+    !state.loading &&
+    state.dashboardIsEmpty &&
+    state.refreshStatus !== 'in_progress' &&
+    !state.refreshing;
+
+  if (!state.dashboardData && state.loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-12 h-12 animate-spin text-purple-400" />
+      </div>
+    );
+  }
+
+  return (
+    
+    <AnalyticsDashboardLayout 
+      tagline="Digital Assets Performance"
+      headerExtra={
+        <div className="flex items-center justify-center gap-3 flex-wrap">
+            <button
+                onClick={actions.handleRefresh}
+                disabled={state.refreshing}
+                className="flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-sm font-medium hover:bg-white/20 transition disabled:opacity-50 cursor-pointer"
+            >
+                {state.refreshing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                <RefreshCw className="w-4 h-4" />
+                )}
+                {state.refreshing ? 'Updating…' : 'Refresh'}
+            </button>
+
+            <button
+                onClick={actions.handleExport}
+                className="flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-sm font-medium hover:bg-white/20 transition cursor-pointer"
+            >
+                <FileDown className="w-4 h-4" />
+                Export CSV
+            </button>
+
+            <button
+                onClick={actions.handleLogout}
+                className="flex items-center gap-2 px-5 py-2.5 bg-red-500/20 backdrop-blur-md border border-red-500/30 rounded-full text-sm font-medium hover:bg-red-500/30 transition text-red-200 cursor-pointer"
+            >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">Logout</span>
+            </button>
+        </div>
+    }
+    >
+      <div className="min-h-screen w-full bg-linear-to-br from-[#0b0f1f] to-[#141a33] text-white flex flex-col -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <Toaster position="top-right" />
+
+        {/* Main Container */}
+        <main className="flex-1 w-full pb-8 max-w-7xl mx-auto">
+          {state.refreshing && (
+            <div className="mb-5 rounded-2xl border border-amber-400/20 bg-amber-400/10 backdrop-blur-xl px-4 py-3 text-sm text-amber-100 flex items-center gap-3">
+              <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+              <span>
+                Refreshing analytics for <strong>{state.debouncedStartDate}</strong> to{' '}
+                <strong>{state.debouncedEndDate}</strong> …
+              </span>
+            </div>
+          )}
+
+          {showEmptyState && (
+            <div className="mb-5 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
+                <div>
+                  <div className="font-semibold text-white/90">
+                    No download data is available for the selected period.
+                  </div>
+                  <div className="text-sm text-white/50 mt-1">
+                    Run a controlled refresh to rebuild this period from Google Analytics 4.
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={actions.handleRefresh}
+                disabled={state.refreshing}
+                className="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition text-sm cursor-pointer"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Refresh Data
+              </button>
+            </div>
+          )}
+
+          {/* KPI Section */}
+          {state.loading ? (
+            <KpiSkeleton />
+          ) : (
+            <KPIStats
+              data={state.normalizedDashboardData}
+              totalUniqueUsers={state.totalUniqueUsers}
+              glass
+            />
+          )}
+
+          {/* Filters */}
+          <FilterBar
+            startDate={state.startDate}
+            endDate={state.endDate}
+            onStartDateChange={actions.handleStartDateChange}
+            onEndDateChange={actions.handleEndDateChange}
+            activePreset={state.activePreset}
+            onSelectPreset={actions.handleApplyPreset}
+            serviceType={state.serviceType}
+            onServiceTypeChange={actions.setServiceType}
+            program={state.program}
+            onProgramChange={actions.setProgram}
+            filterOptions={state.filterOptions}
+            glass
+          />
+
+          {/* Charts Grid wrapped with Individual Error Boundaries */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <AnalyticsErrorBoundary title="Daily Downloads Trend" glass>
+              {state.loading ? (
+                <ChartSkeleton height={64} glass />
+              ) : (
+                <DailyTrendChart data={state.normalizedDashboardData} glass />
+              )}
+            </AnalyticsErrorBoundary>
+
+            <AnalyticsErrorBoundary title="Unique Users Trend" glass>
+              {state.uniqueUsersLoading ? (
+                <ChartSkeleton height={64} glass />
+              ) : (
+                <UniqueUsersTrendChart data={state.uniqueUsersData} glass />
+              )}
+            </AnalyticsErrorBoundary>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <AnalyticsErrorBoundary title="Downloads by Asset Type" glass>
+              {state.loading ? (
+                <ChartSkeleton height={64} glass />
+              ) : (
+                <BreakdownChart
+                  title="Downloads by Asset Type"
+                  icon={PieChart}
+                  type="pie"
+                  items={
+                    state.normalizedDashboardData?.byAssetType?.length
+                      ? state.normalizedDashboardData.byAssetType
+                      : state.assetItems
+                  }
+                  labelKey="asset_type"
+                  valueKey="eventCount"
+                  hasMore={state.assetHasMore}
+                  loadingMore={state.assetLoadingMore}
+                  onLoadMore={actions.loadMoreAsset}
+                  color="text-blue-400"
+                  glass
+                />
+              )}
+            </AnalyticsErrorBoundary>
+
+            <AnalyticsErrorBoundary title="Downloads by Service Type" glass>
+              {state.loading ? (
+                <ChartSkeleton height={64} glass />
+              ) : (
+                <BreakdownChart
+                  title="Downloads by Service Type"
+                  icon={BarChart3}
+                  type="bar"
+                  items={
+                    state.normalizedDashboardData?.byServiceType?.length
+                      ? state.normalizedDashboardData.byServiceType
+                      : state.serviceItems
+                  }
+                  labelKey="service_type"
+                  valueKey="eventCount"
+                  hasMore={state.serviceHasMore}
+                  loadingMore={state.serviceLoadingMore}
+                  onLoadMore={actions.loadMoreService}
+                  color="text-amber-400"
+                  glass
+                />
+              )}
+            </AnalyticsErrorBoundary>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <AnalyticsErrorBoundary title="Unique Users by Asset Type" glass>
+              {state.uniqueUsersLoading ? (
+                <ChartSkeleton height={64} glass />
+              ) : (
+                <BreakdownChart
+                  title="Unique Users by Asset Type"
+                  icon={PieChart}
+                  type="pie"
+                  items={state.uniqueByAsset}
+                  labelKey="asset_type"
+                  valueKey="activeUsers"
+                  hasMore={false}
+                  loadingMore={false}
+                  onLoadMore={() => {}}
+                  color="text-purple-400"
+                  glass
+                />
+              )}
+            </AnalyticsErrorBoundary>
+          </div>
+
+          <AnalyticsErrorBoundary title="Geographic User Map" glass>
+            {state.geoLoading ? (
+              <ChartSkeleton height={80} glass />
+            ) : (
+              <GeoMap data={state.geoData} title="User Locations by Country" glass />
+            )}
+          </AnalyticsErrorBoundary>
+
+          {/* Sessions Data Table */}
+          <div className="mb-6">
+            <AnalyticsErrorBoundary title="Top Sessions Table" glass>
+              {state.sessionsLoading ? (
+                <TableSkeleton rows={state.sessionsLimit} glass />
+              ) : (
+                <>
+                  <TopSessionsTable
+                    sessions={
+                      state.sessions.length
+                        ? state.sessions
+                        : state.normalizedDashboardData?.topSessions ?? []
+                    }
+                    glass
+                  />
+
+                  {state.sessionsTotal > state.sessionsLimit && (
+                    <div className="flex justify-between items-center mt-4 text-white/70">
+                      <span className="text-sm">
+                        Showing {state.sessionsOffset + 1}–
+                        {Math.min(state.sessionsOffset + state.sessionsLimit, state.sessionsTotal)} of{' '}
+                        {state.sessionsTotal}
+                      </span>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={actions.handlePreviousPage}
+                          disabled={!hasPrev}
+                          className="px-3 py-1 border border-white/20 rounded disabled:opacity-40 hover:bg-white/10 transition cursor-pointer"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          onClick={actions.handleNextPage}
+                          disabled={!hasNext}
+                          className="px-3 py-1 border border-white/20 rounded disabled:opacity-40 hover:bg-white/10 transition cursor-pointer"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </AnalyticsErrorBoundary>
+          </div>
+
+          <RefreshIndicator show={state.refreshStatus === 'in_progress'} />
+          <AutoRefreshBanner show={false} />
+        </main>
+      </div>
+    </AnalyticsDashboardLayout>
+  );
+}

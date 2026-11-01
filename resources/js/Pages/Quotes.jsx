@@ -39,6 +39,12 @@ export default function Quotes({ session, quotes }) {
         setBulk({ active: true, done: 0, total: quotes.length });
         await downloadAll(quotes, {
             onProgress: (done, total) => setBulk({ active: true, done, total }),
+            context: {
+                assetType: 'quote',
+                serviceType: session.serviceType,
+                program: session.program.name,
+                session: session.name,
+            },
         });
         setBulk({ active: false, done: 0, total: 0 });
         showToast('All quotes downloaded');

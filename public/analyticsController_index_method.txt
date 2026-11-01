@@ -1,0 +1,116 @@
+/**
+     * Display the analytics dashboard.
+     *
+     * 1. Extract and validate date range parameters using the dedicated date helper.
+     * 2. Build a cache key from the request parameters (date range + filters).
+     * 3. If cached data exists, return JSON for background XHR requests or Inertia response.
+     * 4. Otherwise, build dashboard aggregates from the normalized local table.
+     * 5. If the requested local dataset is empty, dispatch a controlled full refresh.
+     * 6. Render the Inertia dashboard or return raw JSON without making synchronous GA4 requests.
+     *
+     * @param Request $request
+     * @return \Inertia\Response|\Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request)
+    {
+        // ────────────────────────────────────────────────────────────────
+        // Extract and validate request parameters via date helper
+        // ────────────────────────────────────────────────────────────────
+
+        $dates        = $this->validatedDateRange($request);
+        $primaryStart = $dates['start'];
+        $primaryEnd   = $dates['end'];
+
+        $serviceType = $request->input('service_type');
+        $program     = $request->input('program');
+
+        // ────────────────────────────────────────────────────────────────
+        // Build a unique cache key for the exact combination of filters
+        // ────────────────────────────────────────────────────────────────
+
+        $cacheKey = $this->dashboardCacheKey(
+            $primaryStart,
+            $primaryEnd,
+            $serviceType,
+            $program
+        );
+
+        // ────────────────────────────────────────────────────────────────
+        // Flag background Axios/XHR data requests to bypass Inertia 409
+        // ────────────────────────────────────────────────────────────────
+
+        $isJsonRequest = ($request->wantsJson() || $request->ajax() || $request->expectsJson())
+                         && !$request->hasHeader('X-Inertia');
+
+        // ────────────────────────────────────────────────────────────────
+        // Attempt to retrieve from cache
+        // ────────────────────────────────────────────────────────────────
+
+        $cachedData = Cache::get($cacheKey);
+
+        if ($cachedData) {
+            if ($isJsonRequest) {
+                return response()->json($cachedData);
+            }
+
+            // Return cached data immediately – this is the fast path.
+            return Inertia::render('Analytics/Dashboard', $cachedData);
+        }
+
+        // ────────────────────────────────────────────────────────────────
+        // Build the data from the local normalized analytics tables.
+        // ────────────────────────────────────────────────────────────────
+
+        $data = $this->analyticsData->buildDashboardData(
+            $primaryStart,
+            $primaryEnd,
+            $serviceType,
+            $program
+        );
+
+        // ────────────────────────────────────────────────────────────────
+        // If the requested dataset is empty, dispatch the same controlled
+        // rebuild used by the explicit Refresh operation.
+        // ────────────────────────────────────────────────────────────────
+
+        if ((int) ($data['totalDownloads'] ?? 0) === 0) {
+
+            /**
+             * The dashboard does not perform a synchronous GA4 rebuild.
+             *
+             * Instead, dispatch the controlled full-refresh job. This ensures
+             * that all GA4 communication, normalization, validation and local
+             * persistence follow one consistent code path.
+             */
+            if (Cache::get('analytics_refresh_status') !== 'in_progress') {
+                Cache::put(
+                    'analytics_refresh_status',
+                    'in_progress',
+                    now()->addMinutes(30)
+                );
+
+                RefreshAnalyticsData::dispatch(
+                    $primaryStart,
+                    $primaryEnd,
+                    $serviceType,
+                    $program,
+                    true
+                );
+            }
+        }
+
+        // Store the current local result. A background refresh will overwrite
+        // this cache with the rebuilt dataset when it completes.
+        Cache::put(
+            $cacheKey,
+            $data,
+            now()->addMinutes($this->cacheMinutes)
+        );
+        
+        // Intercept Axios calls and return raw JSON
+        if ($isJsonRequest) {
+            return response()->json($data);
+        }
+
+        return Inertia::render('Analytics/Dashboard', $data);
+    }

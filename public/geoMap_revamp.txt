@@ -1,0 +1,26 @@
+Filter out GA4 invalid traffic dimensions in backend service.
+-----------------------------------------------
+Add error boundaries around individual charts.
+-----------------------------------------------
+Refactor with optimization recommendations below.
+Do a thorough QA testing for the refactored dashboard.
+Preserve JSDoc structure, documentation style and code commenting approach.
+
+Move Dictionary Outside Component: GA4_TO_TOPOJSON_COUNTRY_MAP is instantiated inside the Dashboard component body, causing the object to be recreated on every render. Move it outside the component file scope to optimize memory overhead.
+
+Race Condition Guarding on Sub-Fetches: While fetchDashboard uses requestGenerationRef to discard out-of-order responses, fetchBreakdown and fetchSessions do not track request generation IDs, leaving room for race conditions if filters change rapidly.
+
+Custom Hook Abstraction: Extracting API orchestrations (loadAllDashboardData, polling loops, and pagination states) into a custom useDashboardAnalytics hook would decouple the UI glass-morphism layout from side-effect business logic.
+
+Add error boundaries around individual charts.
+-----------------------------------------------
+Make the map viewport & map|countries very colorful.
+Generate a Tailwind CSS glassmorphism theme stylesheet.
+Add DAX performance monitoring integration.
+Write additional end-to-end Cypress tests for dashboard interaction.
+JSDoc structure, comprehensive documentation style and code commenting approach.
+-----------------------------------------------
+
+
+
+

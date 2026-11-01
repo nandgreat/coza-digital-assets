@@ -1,0 +1,2195 @@
+/**
+ * ============================================================
+ * COZA Analytics Dashboard — Master Design System & Styles
+ * ============================================================
+ *
+ * @file        analyticsDashboard.css
+ * @version     2.4.0
+ * @author      Leonard @WittyInventions
+ * @description
+ *   Dedicated visual design system for the COZA Analytics
+ *   Dashboard. Incorporates glassmorphism containers, responsive
+ *   navigation, interactive data widgets, choropleth map layers,
+ *   zoom-aware pin markers, activity heatmaps, and Leaflet overrides.
+ *
+ * @brand
+ *   Commonwealth of Zion Assembly (COZA)
+ *
+ * @brandColors
+ *   Royal Purple  — Primary brand identity (#7a3ff0 / #4b0082)
+ *   Gold          — Premium / emphasis / achievement (#e9ad2c / #d4af37)
+ *   Emerald Green — Success / growth / positive analytics (#10b981)
+ *   White         — Clean surfaces / contrast
+ *
+ * @themes
+ *   Light — White surfaces with soft purple/neutral backgrounds
+ *   Dark  — Deep purple/charcoal surfaces with luminous accents
+ *
+ * @typography
+ *   Primary font: Outfit
+ *
+ * @architecture
+ *   01. Font & Tailwind imports
+ *   02. Tailwind theme tokens
+ *   03. Base layer & application isolation
+ *   04. COZA semantic design tokens & map variables
+ *   05. Navigation & sidebar utilities
+ *   06. Card & surface utilities
+ *   07. Typography utilities
+ *   08. Tables & scrolling utilities
+ *   09. Interaction & status components
+ *   10. Forms & accessibility
+ *   11. Third-party library overrides
+ *   12. Header & sidebar glass surfaces
+ *   13. Footer
+ *   14. Form controls — Selects, Date inputs & Search
+ *   15. Tables — Grid theme
+ *   16. Pie / Donut legend adjustments
+ *   17. Geo Map — Toolbar, Cards, Choropleth, Pins, Heatmaps & Zoom
+ *   18. Accessibility & reduced motion
+ *
+ * ============================================================
+ */
+
+
+/* ============================================================
+   01. FONT & TAILWIND IMPORTS
+   ============================================================ */
+
+/**
+ * @description
+ * Outfit is the primary COZA Dashboard typeface.
+ * Import appears before Tailwind's base layer.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap")
+  layer(base);
+
+@import "tailwindcss";
+
+/**
+ * @description
+ * Tailwind dark mode is driven by the `.dark` class.
+ */
+@custom-variant dark (&:is(.dark *));
+
+
+/* ============================================================
+   02. TAILWIND THEME TOKENS
+   ============================================================ */
+
+@theme {
+  /* ----------------------------------------------------------
+     Typography
+     ---------------------------------------------------------- */
+
+  --font-*: initial;
+  --font-outfit: "Outfit", sans-serif;
+
+  /* ----------------------------------------------------------
+     Responsive Breakpoints
+     ---------------------------------------------------------- */
+
+  --breakpoint-*: initial;
+
+  --breakpoint-2xsm: 375px;
+  --breakpoint-xsm: 425px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  --breakpoint-3xl: 2000px;
+
+  /* ----------------------------------------------------------
+     COZA Royal Purple
+     ---------------------------------------------------------- */
+
+  --color-coza-purple-25:  #faf8ff;
+  --color-coza-purple-50:  #f5f0ff;
+  --color-coza-purple-100: #ebe0ff;
+  --color-coza-purple-200: #dac5ff;
+  --color-coza-purple-300: #c09cff;
+  --color-coza-purple-400: #a875ff;
+  --color-coza-purple-500: #8b5cf6;
+  --color-coza-purple-600: #7a3ff0;
+  --color-coza-purple-700: #6828d9;
+  --color-coza-purple-800: #5520b5;
+  --color-coza-purple-900: #461b91;
+  --color-coza-purple-950: #281052;
+
+  /* ----------------------------------------------------------
+     COZA Gold
+     ---------------------------------------------------------- */
+
+  --color-coza-gold-25:  #fffdf5;
+  --color-coza-gold-50:  #fff9e8;
+  --color-coza-gold-100: #fff0bd;
+  --color-coza-gold-200: #ffe18a;
+  --color-coza-gold-300: #ffd052;
+  --color-coza-gold-400: #f7c344;
+  --color-coza-gold-500: #e9ad2c;
+  --color-coza-gold-600: #d4941c;
+  --color-coza-gold-700: #b87516;
+  --color-coza-gold-800: #945c18;
+  --color-coza-gold-900: #784b18;
+  --color-coza-gold-950: #452809;
+
+  /* ----------------------------------------------------------
+     COZA Emerald Green
+     ---------------------------------------------------------- */
+
+  --color-coza-emerald-25:  #f3fdf8;
+  --color-coza-emerald-50:  #ecfdf5;
+  --color-coza-emerald-100: #d1fae5;
+  --color-coza-emerald-200: #a7f3d0;
+  --color-coza-emerald-300: #6ee7b7;
+  --color-coza-emerald-400: #34d399;
+  --color-coza-emerald-500: #10b981;
+  --color-coza-emerald-600: #059669;
+  --color-coza-emerald-700: #047857;
+  --color-coza-emerald-800: #065f46;
+  --color-coza-emerald-900: #064e3b;
+  --color-coza-emerald-950: #022c22;
+
+  /* ----------------------------------------------------------
+     Neutral / White Palette
+     ---------------------------------------------------------- */
+
+  --color-white: #ffffff;
+
+  --color-gray-25:  #fcfcfd;
+  --color-gray-50:  #f8f7fb;
+  --color-gray-100: #f1eff5;
+  --color-gray-200: #e5e1eb;
+  --color-gray-300: #d5cfdd;
+  --color-gray-400: #aaa2b5;
+  --color-gray-500: #756c80;
+  --color-gray-600: #5b5266;
+  --color-gray-700: #443b4e;
+  --color-gray-800: #30283a;
+  --color-gray-900: #211a2a;
+  --color-gray-950: #130e19;
+
+  /* ----------------------------------------------------------
+     Semantic States
+     ---------------------------------------------------------- */
+
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+
+  --color-warning-500: #e9ad2c;
+  --color-warning-600: #d4941c;
+
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+
+  --color-info-500: #8b5cf6;
+  --color-info-600: #7a3ff0;
+
+  /* ----------------------------------------------------------
+     Dashboard Typography Scale
+     ---------------------------------------------------------- */
+
+  --text-theme-xl: 20px;
+  --text-theme-xl--line-height: 30px;
+
+  --text-theme-sm: 14px;
+  --text-theme-sm--line-height: 20px;
+
+  --text-theme-xs: 12px;
+  --text-theme-xs--line-height: 18px;
+
+  /* ----------------------------------------------------------
+     Elevation
+     ---------------------------------------------------------- */
+
+  --shadow-theme-xs:
+    0 1px 2px 0 rgba(33, 26, 42, 0.05);
+
+  --shadow-theme-sm:
+    0 1px 3px 0 rgba(33, 26, 42, 0.10),
+    0 1px 2px 0 rgba(33, 26, 42, 0.06);
+
+  --shadow-theme-md:
+    0 4px 8px -2px rgba(33, 26, 42, 0.10),
+    0 2px 4px -2px rgba(33, 26, 42, 0.06);
+
+  --shadow-theme-lg:
+    0 12px 16px -4px rgba(33, 26, 42, 0.08),
+    0 4px 6px -2px rgba(33, 26, 42, 0.04);
+
+  --shadow-theme-xl:
+    0 20px 24px -4px rgba(33, 26, 42, 0.10),
+    0 8px 8px -4px rgba(33, 26, 42, 0.04);
+
+  --shadow-coza-purple:
+    0 8px 24px rgba(122, 63, 240, 0.20);
+
+  --shadow-coza-gold:
+    0 8px 24px rgba(233, 173, 44, 0.20);
+
+  --shadow-coza-emerald:
+    0 8px 24px rgba(16, 185, 129, 0.18);
+
+  /* ----------------------------------------------------------
+     Focus Ring & Layering
+     ---------------------------------------------------------- */
+
+  --shadow-focus-ring:
+    0 0 0 4px rgba(122, 63, 240, 0.15);
+
+  --z-index-1: 1;
+  --z-index-9: 9;
+  --z-index-40: 40;
+  --z-index-50: 50;
+  --z-index-99: 99;
+  --z-index-999: 999;
+  --z-index-9999: 9999;
+  --z-index-99999: 99999;
+}
+
+
+/* ============================================================
+   03. BASE LAYER & APPLICATION ISOLATION
+   ============================================================ */
+
+@layer base {
+
+  /**
+   * @description
+   * Establishes consistent border rendering throughout the
+   * dashboard without modifying unrelated legacy views.
+   */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+/**
+ * @description
+ * Removes legacy application constraints when the Analytics
+ * Dashboard is mounted.
+ */
+#app:has(.analytics-dashboard-root),
+html:has(.analytics-dashboard-root),
+body:has(.analytics-dashboard-root) {
+  width: 100% !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: block !important;
+
+  background-color: #f8f7fb !important;
+  background-image: none !important;
+}
+
+/**
+ * @description
+ * Dark-theme document background.
+ */
+html.dark:has(.analytics-dashboard-root),
+body.dark:has(.analytics-dashboard-root) {
+  background-color: #130e19 !important;
+  background-image: none !important;
+}
+
+/**
+ * @description
+ * Main dashboard application shell.
+ *
+ * @class analytics-dashboard-root
+ */
+.analytics-dashboard-root {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+
+  width: 100%;
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(122, 63, 240, 0.055),
+      transparent 28%
+    ),
+    #f8f7fb;
+
+  color: #30283a;
+
+  font-family: "Outfit", sans-serif;
+
+  transition:
+    background-color 300ms ease,
+    color 300ms ease;
+}
+
+/**
+ * @description
+ * Dark dashboard shell with deep purple identity.
+ */
+.dark .analytics-dashboard-root {
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(139, 92, 246, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(16, 185, 129, 0.055),
+      transparent 25%
+    ),
+    #130e19;
+
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/**
+ * @description
+ * Prevents legacy footer styles from affecting the dashboard.
+ */
+.analytics-dashboard-root footer {
+  margin-top: 0;
+  letter-spacing: normal;
+  line-height: inherit;
+}
+
+
+/* ============================================================
+   04. COZA SEMANTIC DESIGN TOKENS & MAP VARIABLES
+   ============================================================ */
+
+/**
+ * @section Semantic Design Tokens
+ * @description Central variable map for colors, choropleth activity tiers,
+ * heatmap stops, and glassmorphism styling.
+ */
+:root {
+
+  /* Primary Brand */
+  --coza-primary: #7a3ff0;
+  --coza-primary-hover: #6828d9;
+  --coza-primary-soft: rgba(122, 63, 240, 0.10);
+  --coza-primary-border: rgba(122, 63, 240, 0.22);
+
+  /* COZA Gold Palette */
+  --coza-gold: #e9ad2c;
+  --coza-gold-hover: #d4941c;
+  --coza-gold-soft: rgba(233, 173, 44, 0.12);
+  --coza-gold-border: rgba(233, 173, 44, 0.25);
+  --coza-gold-primary: #d4af37;
+  --coza-gold-light: #f3e5ab;
+  --coza-gold-dark: #aa820a;
+  --coza-gold-glow: rgba(212, 175, 55, 0.4);
+
+  /* COZA Royal Purple Palette */
+  --coza-purple-primary: #4b0082;
+  --coza-purple-light: #7b2cbf;
+  --coza-purple-dark: #240046;
+  --coza-purple-glow: rgba(75, 0, 130, 0.4);
+
+  /* Emerald */
+  --coza-emerald: #10b981;
+  --coza-emerald-hover: #059669;
+  --coza-emerald-soft: rgba(16, 185, 129, 0.10);
+  --coza-emerald-border: rgba(16, 185, 129, 0.22);
+
+  /* Activity Spectrum Tiers (Gold -> Purple) */
+  --map-tier-1-color: #fceabb; /* Tier 1: Low Activity */
+  --map-tier-2-color: #d4af37; /* Tier 2: Moderate Activity */
+  --map-tier-3-color: #9d4edd; /* Tier 3: High Activity */
+  --map-tier-4-color: #3c096c; /* Tier 4: Peak Activity */
+
+  /* Heatmap Gradient Stops */
+  --heatmap-stop-low: rgba(243, 229, 171, 0.25);
+  --heatmap-stop-mid: rgba(212, 175, 55, 0.65);
+  --heatmap-stop-high: rgba(123, 44, 191, 0.85);
+  --heatmap-stop-peak: rgba(36, 0, 70, 0.95);
+
+  /* Glassmorphism Variables */
+  --glass-bg: rgba(15, 23, 42, 0.75);
+  --glass-border: rgba(212, 175, 55, 0.25);
+  --glass-backdrop-blur: 12px;
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Surfaces & Content */
+  --coza-surface: #ffffff;
+  --coza-surface-soft: #f8f7fb;
+  --coza-surface-muted: #f1eff5;
+
+  --coza-text-primary: #211a2a;
+  --coza-text-secondary: #5b5266;
+  --coza-text-muted: #756c80;
+
+  --coza-border: #e5e1eb;
+
+  --coza-sidebar-start: #21103f;
+  --coza-sidebar-end: #130e19;
+}
+
+/**
+ * @description
+ * Dark-theme semantic variables.
+ */
+.dark {
+  --coza-primary: #a875ff;
+  --coza-primary-hover: #c09cff;
+  --coza-primary-soft: rgba(168, 117, 255, 0.13);
+  --coza-primary-border: rgba(168, 117, 255, 0.25);
+
+  --coza-gold: #ffd052;
+  --coza-gold-hover: #ffe18a;
+  --coza-gold-soft: rgba(255, 208, 82, 0.12);
+  --coza-gold-border: rgba(255, 208, 82, 0.25);
+
+  --coza-emerald: #34d399;
+  --coza-emerald-hover: #6ee7b7;
+  --coza-emerald-soft: rgba(52, 211, 153, 0.12);
+  --coza-emerald-border: rgba(52, 211, 153, 0.25);
+
+  --coza-surface: #211a2a;
+  --coza-surface-soft: #18121f;
+  --coza-surface-muted: #30283a;
+
+  --coza-text-primary: #ffffff;
+  --coza-text-secondary: #d5cfdd;
+  --coza-text-muted: #aaa2b5;
+
+  --coza-border: rgba(255, 255, 255, 0.09);
+
+  --coza-sidebar-start: #21103f;
+  --coza-sidebar-end: #0b0710;
+}
+
+
+/* ============================================================
+   05. NAVIGATION & SIDEBAR
+   ============================================================ */
+
+/**
+ * @utility analytics-sidebar
+ */
+@utility analytics-sidebar {
+  @apply fixed left-0 top-0 z-40 flex h-screen flex-col
+    text-white shadow-2xl transition-all duration-300;
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--coza-sidebar-start) 0%,
+      var(--coza-sidebar-end) 100%
+    );
+
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/**
+ * @utility menu-item
+ */
+@utility menu-item {
+  @apply relative flex w-full items-center gap-3 rounded-lg
+    px-3 py-2 font-medium transition-all duration-200;
+
+  font-size: 14px;
+}
+
+/**
+ * @utility menu-item-active
+ */
+@utility menu-item-active {
+  @apply text-white;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.32),
+      rgba(122, 63, 240, 0.18)
+    );
+
+  border: 1px solid rgba(168, 117, 255, 0.20);
+
+  box-shadow:
+    inset 3px 0 0 var(--coza-gold),
+    0 4px 16px rgba(122, 63, 240, 0.12);
+}
+
+/**
+ * @utility menu-item-inactive
+ */
+@utility menu-item-inactive {
+  @apply text-white/65;
+
+  &:hover {
+    @apply text-white;
+
+    background: rgba(255, 255, 255, 0.07);
+  }
+}
+
+/**
+ * @utility menu-item-icon
+ */
+@utility menu-item-icon {
+  @apply text-white/55 transition-colors duration-200;
+}
+
+/**
+ * @utility menu-item-icon-active
+ */
+@utility menu-item-icon-active {
+  color: var(--coza-gold);
+}
+
+/**
+ * @utility menu-item-icon-size
+ */
+@utility menu-item-icon-size {
+  & svg {
+    @apply size-6!;
+  }
+}
+
+/**
+ * @utility menu-item-icon-inactive
+ */
+@utility menu-item-icon-inactive {
+  @apply text-white/50 transition-colors duration-200;
+
+  .group:hover & {
+    @apply text-white/80;
+  }
+}
+
+/**
+ * @utility analytics-sidebar-header
+ */
+@utility analytics-sidebar-header {
+  @apply flex items-center justify-between p-5;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/**
+ * @utility analytics-sidebar-nav
+ */
+@utility analytics-sidebar-nav {
+  @apply flex-1 space-y-1 overflow-y-auto px-3 py-6;
+}
+
+/**
+ * @utility analytics-sidebar-nav-item
+ */
+@utility analytics-sidebar-nav-item {
+  @apply flex items-center gap-3 rounded-lg px-4 py-3
+    text-white/65 transition-all duration-200;
+
+  &:hover {
+    @apply text-white;
+    background: rgba(255, 255, 255, 0.07);
+  }
+}
+
+/**
+ * @utility analytics-sidebar-nav-item--active
+ */
+@utility analytics-sidebar-nav-item--active {
+  @apply text-white;
+
+  background: rgba(139, 92, 246, 0.22);
+
+  box-shadow:
+    inset 3px 0 0 var(--coza-gold);
+}
+
+/**
+ * @utility analytics-sidebar-footer
+ */
+@utility analytics-sidebar-footer {
+  @apply p-4;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/**
+ * @utility analytics-sidebar-user
+ */
+@utility analytics-sidebar-user {
+  @apply mb-3 flex items-center gap-3 rounded-xl px-3 py-3;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.16),
+      rgba(233, 173, 44, 0.06)
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+/* ============================================================
+   06. CARDS & SURFACES
+   ============================================================ */
+
+/**
+ * @utility analytics-card
+ */
+@utility analytics-card {
+  @apply rounded-2xl border bg-white shadow-theme-sm
+    transition-all duration-300;
+
+  border-color: var(--coza-border);
+  background-color: var(--coza-surface);
+
+  &:hover {
+    box-shadow: var(--shadow-theme-md);
+  }
+}
+
+/**
+ * @utility analytics-card-title
+ */
+@utility analytics-card-title {
+  @apply flex items-center gap-2 text-lg font-semibold;
+
+  color: var(--coza-text-primary);
+}
+
+/**
+ * @utility analytics-chart-placeholder
+ */
+@utility analytics-chart-placeholder {
+  @apply flex h-full items-center justify-center text-sm;
+
+  color: var(--coza-text-muted);
+}
+
+/**
+ * @utility coza-glass-accent
+ */
+@utility coza-glass-accent {
+  @apply rounded-2xl border backdrop-blur-md shadow-theme-sm;
+
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(122, 63, 240, 0.12);
+}
+
+.dark .coza-glass-accent {
+  background: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+/**
+ * @utility glass-card
+ */
+@utility glass-card {
+  @apply rounded-2xl border backdrop-blur-xl shadow-2xl;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(122, 63, 240, 0.16),
+      rgba(255, 255, 255, 0.08)
+    );
+
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/**
+ * @utility shadow-glass
+ */
+@utility shadow-glass {
+  @apply shadow-2xl;
+}
+
+
+/* ============================================================
+   07. TYPOGRAPHY
+   ============================================================ */
+
+/**
+ * @utility text-glass-primary
+ */
+@utility text-glass-primary {
+  @apply text-white/95;
+}
+
+/**
+ * @utility text-glass-secondary
+ */
+@utility text-glass-secondary {
+  @apply text-white/65;
+}
+
+.analytics-dashboard-root .text-coza-primary {
+  color: var(--coza-primary);
+}
+
+.analytics-dashboard-root .text-coza-gold {
+  color: var(--coza-gold);
+}
+
+.analytics-dashboard-root .text-coza-emerald {
+  color: var(--coza-emerald);
+}
+
+
+/* ============================================================
+   08. TABLES & SCROLLING
+   ============================================================ */
+
+/**
+ * @utility analytics-table-wrapper
+ */
+@utility analytics-table-wrapper {
+  @apply -mx-2 overflow-x-auto;
+}
+
+/**
+ * @utility analytics-table
+ */
+@utility analytics-table {
+  @apply w-full text-sm;
+}
+
+/**
+ * @utility no-scrollbar
+ */
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/**
+ * @utility custom-scrollbar
+ */
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 9999px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: rgba(122, 63, 240, 0.22);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(122, 63, 240, 0.42);
+  }
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(168, 117, 255, 0.28);
+}
+
+
+/* ============================================================
+   09. INTERACTION / STATUS COMPONENTS
+   ============================================================ */
+
+/**
+ * @utility analytics-btn-load-more
+ */
+@utility analytics-btn-load-more {
+  @apply mx-auto flex items-center gap-1 text-sm
+    font-medium transition-colors duration-200
+    disabled:opacity-50;
+
+  color: var(--coza-primary);
+
+  &:hover {
+    color: var(--coza-primary-hover);
+  }
+}
+
+/**
+ * @utility analytics-refresh-indicator
+ */
+@utility analytics-refresh-indicator {
+  @apply fixed bottom-4 right-4 z-50 flex items-center gap-3
+    rounded-xl px-4 py-3 shadow-lg;
+
+  color: var(--coza-primary);
+  background: var(--coza-surface);
+  border: 1px solid var(--coza-primary-border);
+  box-shadow: 0 10px 30px rgba(122, 63, 240, 0.15);
+}
+
+/**
+ * @utility analytics-auto-refresh-banner
+ */
+@utility analytics-auto-refresh-banner {
+  @apply mt-4 rounded-xl p-4 text-center text-sm;
+
+  color: #945c18;
+  background: var(--coza-gold-soft);
+  border: 1px solid var(--coza-gold-border);
+}
+
+.dark .analytics-auto-refresh-banner {
+  color: var(--coza-gold);
+}
+
+/* Status Badges */
+.analytics-status-success {
+  color: var(--coza-emerald);
+  background: var(--coza-emerald-soft);
+  border: 1px solid var(--coza-emerald-border);
+}
+
+.analytics-status-gold {
+  color: var(--coza-gold);
+  background: var(--coza-gold-soft);
+  border: 1px solid var(--coza-gold-border);
+}
+
+.analytics-status-primary {
+  color: var(--coza-primary);
+  background: var(--coza-primary-soft);
+  border: 1px solid var(--coza-primary-border);
+}
+
+
+/* ============================================================
+   10. FORMS & ACCESSIBILITY
+   ============================================================ */
+
+.analytics-dashboard-root
+:where(
+  button,
+  input,
+  select,
+  textarea,
+  a
+):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(122, 63, 240, 0.18);
+}
+
+@layer utilities {
+  input[type="date"]:not(.coza-date-input)::-webkit-inner-spin-button,
+  input[type="time"]:not(.coza-date-input)::-webkit-inner-spin-button,
+  input[type="date"]:not(.coza-date-input)::-webkit-calendar-picker-indicator,
+  input[type="time"]:not(.coza-date-input)::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+}
+
+.tableCheckbox:checked ~ span span {
+  @apply opacity-100;
+}
+
+.tableCheckbox:checked ~ span {
+  background: var(--coza-primary);
+  border-color: var(--coza-primary);
+}
+
+
+/* ============================================================
+   11. THIRD-PARTY LIBRARY OVERRIDES
+   ============================================================ */
+
+/* ApexCharts */
+.apexcharts-legend-text {
+  color: var(--coza-text-secondary) !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  line-height: 1.3 !important;
+  white-space: nowrap;
+}
+
+.apexcharts-legend-series {
+  display: inline-flex !important;
+  align-items: center !important;
+  max-width: 100%;
+}
+
+.apexcharts-legend-marker {
+  position: relative !important;
+  flex: 0 0 auto;
+  margin-right: 7px !important;
+  vertical-align: middle !important;
+}
+
+.apexcharts-text {
+  fill: var(--coza-text-secondary) !important;
+}
+
+.apexcharts-gridline {
+  stroke: rgba(122, 63, 240, 0.08) !important;
+}
+
+.dark .apexcharts-gridline {
+  stroke: rgba(255, 255, 255, 0.07) !important;
+}
+
+.apexcharts-tooltip.apexcharts-theme-light {
+  @apply gap-1 rounded-xl! border! p-3 shadow-theme-md!;
+
+  background: var(--coza-surface) !important;
+  border-color: var(--coza-border) !important;
+}
+
+.apexcharts-tooltip-title {
+  @apply mb-0 border-b-0 bg-transparent p-0 text-[10px] leading-4;
+
+  color: var(--coza-text-primary) !important;
+}
+
+.apexcharts-tooltip-text {
+  font-size: 12px !important;
+  color: var(--coza-text-secondary) !important;
+}
+
+.apexcharts-tooltip-text-y-value {
+  font-weight: 600 !important;
+}
+
+.apexcharts-tooltip-marker {
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+}
+
+.apexcharts-tooltip-series-group,
+.apexcharts-tooltip-y-group {
+  padding: 0 !important;
+}
+
+/* jVectorMap */
+.jvectormap-container {
+  background: var(--coza-surface-soft) !important;
+}
+
+.jvectormap-region.jvectormap-element {
+  fill: #d5cfdd !important;
+
+  &:hover {
+    fill: var(--coza-primary) !important;
+  }
+}
+
+.dark .jvectormap-region.jvectormap-element {
+  fill: #443b4e !important;
+
+  &:hover {
+    fill: var(--coza-primary) !important;
+  }
+}
+
+.jvectormap-marker.jvectormap-element {
+  stroke: var(--coza-border) !important;
+}
+
+.jvectormap-tip {
+  background: var(--coza-primary) !important;
+  border: none !important;
+  padding: 6px 10px !important;
+  border-radius: 6px;
+}
+
+.jvectormap-zoomin,
+.jvectormap-zoomout {
+  display: none !important;
+}
+
+/* Flatpickr */
+.flatpickr-calendar {
+  @apply mt-2 rounded-xl! border! p-5! shadow-theme-md!;
+
+  background: var(--coza-surface) !important;
+  border-color: var(--coza-border) !important;
+  color: var(--coza-text-secondary) !important;
+}
+
+.dark .flatpickr-calendar {
+  background: #211a2a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #d5cfdd !important;
+  box-shadow: var(--shadow-theme-xl) !important;
+}
+
+/* SimpleBar */
+.simplebar-scrollbar::before {
+  border-radius: 9999px !important;
+  background: rgba(122, 63, 240, 0.25) !important;
+  opacity: 1 !important;
+}
+
+.dark .simplebar-scrollbar::before {
+  background: rgba(168, 117, 255, 0.30) !important;
+}
+
+/* Brand Utilities */
+@utility coza-gradient {
+  background:
+    linear-gradient(
+      135deg,
+      #7a3ff0 0%,
+      #8b5cf6 48%,
+      #e9ad2c 100%
+    );
+}
+
+@utility coza-gradient-text {
+  background-image: linear-gradient(to right, #9333ea, #f59e0b);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@utility coza-purple-glow {
+  box-shadow: 0 8px 30px rgba(122, 63, 240, 0.18);
+}
+
+@utility coza-gold-glow {
+  box-shadow: 0 8px 30px rgba(233, 173, 44, 0.16);
+}
+
+@utility coza-emerald-glow {
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.15);
+}
+
+
+/* ============================================================
+   12. HEADER / SIDEBAR GLASS SURFACES
+   ============================================================ */
+
+@utility coza-header-glass {
+  @apply sticky top-0 z-30 border-b backdrop-blur-xl transition-colors duration-300;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(122, 63, 240, 0.07),
+      rgba(255, 255, 255, 0.86) 45%,
+      rgba(233, 173, 44, 0.07)
+    );
+
+  border-color: var(--coza-primary-border);
+}
+
+.dark .coza-header-glass {
+  background:
+    linear-gradient(
+      120deg,
+      rgba(139, 92, 246, 0.16),
+      rgba(24, 18, 31, 0.80) 45%,
+      rgba(233, 173, 44, 0.08)
+    );
+
+  border-color: rgba(168, 117, 255, 0.18);
+}
+
+@utility coza-sidebar-glass {
+  @apply border-r backdrop-blur-xl;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(245, 240, 255, 0.90) 55%,
+      rgba(255, 249, 232, 0.90) 100%
+    );
+
+  border-color: var(--coza-primary-border);
+}
+
+.dark .coza-sidebar-glass {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(33, 16, 63, 0.94) 0%,
+      rgba(19, 14, 25, 0.96) 55%,
+      rgba(11, 7, 16, 0.97) 100%
+    );
+
+  border-color: rgba(168, 117, 255, 0.16);
+}
+
+@utility coza-sidebar-link-divider {
+  border-top: 1px solid var(--coza-border);
+
+  &:first-child {
+    border-top: none;
+  }
+}
+
+.dark .coza-sidebar-link-divider {
+  border-top-color: rgba(255, 255, 255, 0.07);
+}
+
+@utility coza-menu-item-active {
+  @apply text-sm font-semibold;
+
+  color: var(--coza-primary);
+  background: linear-gradient(135deg, rgba(122, 63, 240, 0.14), rgba(233, 173, 44, 0.10));
+  border: 1px solid var(--coza-primary-border);
+  box-shadow:
+    inset 3px 0 0 var(--coza-gold),
+    0 4px 14px rgba(122, 63, 240, 0.10);
+}
+
+.dark .coza-menu-item-active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(168, 117, 255, 0.32), rgba(255, 208, 82, 0.10));
+  border-color: rgba(168, 117, 255, 0.25);
+}
+
+@utility coza-menu-item-inactive {
+  @apply text-sm font-medium;
+
+  color: var(--coza-text-secondary);
+  border: 1px solid transparent;
+
+  &:hover {
+    color: var(--coza-primary);
+    background: var(--coza-primary-soft);
+    border-color: var(--coza-primary-border);
+  }
+}
+
+.dark .coza-menu-item-inactive:hover {
+  color: var(--coza-gold);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+@utility coza-menu-item-icon-active {
+  color: var(--coza-gold-hover);
+}
+
+.dark .coza-menu-item-icon-active {
+  color: var(--coza-gold);
+}
+
+@utility coza-menu-item-icon-inactive {
+  @apply transition-colors duration-200;
+
+  color: var(--coza-text-muted);
+
+  .group:hover & {
+    color: var(--coza-primary);
+  }
+}
+
+
+/* ============================================================
+   13. FOOTER
+   ============================================================ */
+
+.analytics-dashboard-root footer {
+  border-top: 1px solid var(--coza-primary-border);
+  color: var(--coza-text-secondary);
+}
+
+.dark .analytics-dashboard-root footer {
+  border-top-color: var(--coza-border);
+}
+
+@utility coza-footer-brand {
+  background-image:
+    linear-gradient(90deg, #7a3ff0 0%, #8b5cf6 45%, #e9ad2c 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   14. FORM CONTROLS -- SELECTS, DATE INPUTS & SEARCH
+   ============================================================ */
+
+@utility coza-select-standout {
+  @apply appearance-none rounded-lg border bg-white outline-none
+    transition-all duration-200;
+
+  color: var(--coza-text-primary);
+  border-color: var(--coza-primary-border);
+  background-image:
+    linear-gradient(135deg, rgba(122, 63, 240, 0.06), rgba(233, 173, 44, 0.07));
+  box-shadow: var(--shadow-theme-xs);
+  color-scheme: light;
+
+  &:hover {
+    border-color: var(--coza-primary);
+    box-shadow: 0 4px 14px rgba(122, 63, 240, 0.12);
+  }
+
+  &:focus {
+    border-color: var(--coza-primary);
+    box-shadow:
+      0 0 0 3px var(--coza-primary-soft),
+      0 6px 18px rgba(233, 173, 44, 0.16);
+  }
+}
+
+.coza-select-standout option {
+  background-color: #ffffff;
+  color: var(--coza-text-primary);
+}
+
+.dark .coza-select-standout option {
+  background-color: #211a2a;
+  color: #ffffff;
+}
+
+.dark .coza-select-standout {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(168, 117, 255, 0.28);
+  background-image:
+    linear-gradient(135deg, rgba(168, 117, 255, 0.12), rgba(255, 208, 82, 0.07));
+  color-scheme: dark;
+}
+
+.dark .coza-select-standout:hover {
+  border-color: var(--coza-primary);
+  box-shadow: 0 4px 16px rgba(168, 117, 255, 0.22);
+}
+
+.dark .coza-select-standout:focus {
+  box-shadow:
+    0 0 0 3px var(--coza-primary-soft),
+    0 6px 20px rgba(255, 208, 82, 0.16);
+}
+
+@utility coza-date-input {
+  @apply rounded-lg border bg-white outline-none transition-all duration-200;
+
+  color: var(--coza-text-primary);
+  border-color: var(--coza-primary-border);
+  background-image:
+    linear-gradient(135deg, rgba(122, 63, 240, 0.06), rgba(233, 173, 44, 0.07));
+  box-shadow: var(--shadow-theme-xs);
+  color-scheme: light;
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 2px;
+    border-radius: 4px;
+    transition: opacity 150ms ease, background-color 150ms ease;
+  }
+
+  &::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    background-color: var(--coza-primary-soft);
+  }
+
+  &:hover {
+    border-color: var(--coza-primary);
+    box-shadow: 0 4px 14px rgba(122, 63, 240, 0.12);
+  }
+
+  &:focus {
+    border-color: var(--coza-primary);
+    box-shadow:
+      0 0 0 3px var(--coza-primary-soft),
+      0 6px 18px rgba(233, 173, 44, 0.16);
+  }
+}
+
+.dark .coza-date-input {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(168, 117, 255, 0.28);
+  background-image:
+    linear-gradient(135deg, rgba(168, 117, 255, 0.12), rgba(255, 208, 82, 0.07));
+  color-scheme: dark;
+}
+
+.dark .coza-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.4);
+}
+
+.dark .coza-date-input:hover {
+  border-color: var(--coza-primary);
+  box-shadow: 0 4px 16px rgba(168, 117, 255, 0.22);
+}
+
+.dark .coza-date-input:focus {
+  box-shadow:
+    0 0 0 3px var(--coza-primary-soft),
+    0 6px 20px rgba(255, 208, 82, 0.16);
+}
+
+@utility coza-geo-search-input {
+  @apply h-8 w-full rounded-lg border bg-white pl-8 pr-7 text-xs font-medium
+    shadow-theme-xs outline-none transition-all duration-200;
+
+  color: var(--coza-text-primary);
+  border-color: var(--coza-primary-border);
+
+  &:focus {
+    border-color: var(--coza-primary);
+    box-shadow: 0 0 0 3px var(--coza-primary-soft);
+  }
+}
+
+.dark .coza-geo-search-input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(168, 117, 255, 0.24);
+}
+
+
+/* ============================================================
+   15. TABLES -- GRID THEME
+   ============================================================ */
+
+@utility coza-table-grid-wrapper {
+  & table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+}
+
+@utility coza-table-grid-head {
+  & th {
+    background: var(--coza-primary-soft);
+    color: var(--coza-text-secondary);
+    border-bottom: 1px solid var(--coza-border);
+  }
+}
+
+.dark .coza-table-grid-head th {
+  background: rgba(168, 117, 255, 0.08);
+  color: var(--coza-text-secondary);
+}
+
+@utility coza-table-grid-row {
+  @apply transition-colors duration-200;
+
+  background: var(--coza-surface);
+
+  & td {
+    border-bottom: 1px solid var(--coza-border);
+  }
+
+  &:nth-child(even) {
+    background: var(--coza-surface-soft);
+  }
+
+  &:hover {
+    background: var(--coza-primary-soft);
+  }
+
+  &:last-child td {
+    border-bottom: none;
+  }
+}
+
+.dark .coza-table-grid-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dark .coza-table-grid-row:hover {
+  background: rgba(168, 117, 255, 0.06);
+}
+
+
+/* ============================================================
+   16. PIE / DONUT LEGEND SPACING FIX
+   ============================================================ */
+
+@utility coza-pie-legend-fix {
+  & .apexcharts-legend {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    row-gap: 6px !important;
+  }
+}
+
+
+/* ============================================================
+   17. GEO MAP -- TOOLBAR, CARDS, CHOROPLETH, PINS, HEATMAPS & ZOOM
+   ============================================================ */
+
+/**
+ * @utility coza-toggle-group
+ */
+@utility coza-toggle-group {
+  @apply inline-flex items-center gap-0.5 rounded-lg border p-0.5;
+
+  border-color: var(--coza-primary-border);
+  background: var(--coza-primary-soft);
+}
+
+.dark .coza-toggle-group {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(168, 117, 255, 0.22);
+}
+
+@utility coza-toggle-btn {
+  @apply inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs
+    font-medium transition-all duration-200;
+
+  color: var(--coza-text-muted);
+
+  &:hover {
+    color: var(--coza-primary);
+  }
+}
+
+.dark .coza-toggle-btn:hover {
+  color: var(--coza-gold);
+}
+
+@utility coza-toggle-btn-active {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, var(--coza-primary), var(--coza-gold)) !important;
+  box-shadow: 0 4px 12px rgba(122, 63, 240, 0.28);
+}
+
+@utility coza-geo-export-btn {
+  @apply inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs
+    font-semibold transition-all duration-200 disabled:cursor-not-allowed
+    disabled:opacity-50;
+
+  color: var(--coza-gold-hover);
+  border-color: var(--coza-gold-border);
+  background: var(--coza-gold-soft);
+
+  &:hover:not(:disabled) {
+    border-color: var(--coza-gold);
+    box-shadow: 0 6px 16px rgba(233, 173, 44, 0.22);
+  }
+}
+
+.dark .coza-geo-export-btn {
+  color: var(--coza-gold);
+}
+
+@utility coza-country-card {
+  @apply flex min-h-12 cursor-pointer items-center justify-between rounded-xl
+    border p-3 transition-all duration-300;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(122, 63, 240, 0.05),
+      rgba(255, 255, 255, 0.92) 60%,
+      rgba(233, 173, 44, 0.05)
+    );
+
+  border-color: var(--coza-primary-border);
+  box-shadow: var(--shadow-theme-xs);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--coza-gold);
+    box-shadow:
+      0 10px 28px rgba(122, 63, 240, 0.16),
+      0 6px 16px rgba(233, 173, 44, 0.12);
+    transform: translateY(-1px);
+  }
+}
+
+.dark .coza-country-card {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(168, 117, 255, 0.10),
+      rgba(33, 26, 42, 0.92) 60%,
+      rgba(255, 208, 82, 0.06)
+    );
+
+  border-color: rgba(168, 117, 255, 0.18);
+}
+
+.dark .coza-country-card:hover,
+.dark .coza-country-card:focus-visible {
+  border-color: var(--coza-gold);
+  box-shadow:
+    0 10px 30px rgba(168, 117, 255, 0.22),
+    0 6px 18px rgba(255, 208, 82, 0.14);
+}
+
+@utility coza-geo-panel {
+  @apply rounded-xl border p-3 backdrop-blur-md;
+
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--coza-primary-border);
+}
+
+.dark .coza-geo-panel {
+  background: rgba(33, 26, 42, 0.92);
+  border-color: rgba(168, 117, 255, 0.20);
+}
+
+/* ------------------------------------------------------------
+   CHOROPLETH ACTIVITY TIERS
+   ------------------------------------------------------------ */
+
+/**
+ * @section Map Choropleth & Activity Tiers
+ * @description Region fill and border styling based on demographic activity intensity.
+ */
+.map-country-base {
+  fill: var(--coza-surface-muted);
+  stroke: rgba(255, 255, 255, 0.65);
+}
+
+.map-country-tier-1 {
+  fill: var(--map-tier-1-color) !important;
+  fill-opacity: 0.65;
+  stroke: var(--coza-gold-dark);
+  stroke-width: 0.75px;
+  transition: all var(--transition-fast);
+}
+
+.map-country-tier-2 {
+  fill: var(--map-tier-2-color) !important;
+  fill-opacity: 0.75;
+  stroke: var(--coza-gold-primary);
+  stroke-width: 1px;
+  transition: all var(--transition-fast);
+}
+
+.map-country-tier-3 {
+  fill: var(--map-tier-3-color) !important;
+  fill-opacity: 0.85;
+  stroke: var(--coza-purple-light);
+  stroke-width: 1px;
+  transition: all var(--transition-fast);
+}
+
+.map-country-tier-4 {
+  fill: var(--map-tier-4-color) !important;
+  fill-opacity: 0.95;
+  stroke: var(--coza-purple-primary);
+  stroke-width: 1.25px;
+  transition: all var(--transition-fast);
+}
+
+/**
+ * @section Country Interactive States
+ */
+.map-country-interactive:hover {
+  fill-opacity: 0.95 !important;
+  stroke: var(--coza-gold-primary) !important;
+  stroke-width: 2px !important;
+  cursor: pointer;
+  filter: drop-shadow(0 0 8px var(--coza-gold-glow));
+}
+
+.map-country-selected {
+  stroke: #ffffff !important;
+  stroke-width: 2.5px !important;
+  filter: drop-shadow(0 0 12px var(--coza-purple-glow));
+}
+
+/* ------------------------------------------------------------
+   PIN MARKERS & ZOOM-AWARE SCALING
+   ------------------------------------------------------------ */
+
+/**
+ * @component CozaPinMarker
+ * @description Base custom map pin marker with gold-to-purple radial gradient.
+ */
+.coza-marker {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  margin-top: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--coza-gold-primary) 30%, var(--coza-purple-primary) 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px var(--coza-gold-glow);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+ * @state coza-marker:hover
+ */
+.coza-marker:hover {
+  transform: scale(1.25);
+  box-shadow: 0 0 16px var(--coza-gold-primary);
+  z-index: 1000 !important;
+}
+
+/**
+ * @state coza-marker-selected
+ * @description Active state pin featuring a continuous pulsing aura.
+ */
+.coza-marker-selected,
+.coza-map-pin-selected {
+  background: radial-gradient(circle, #ffffff 20%, var(--coza-gold-primary) 60%, var(--coza-purple-primary) 100%);
+  border-color: var(--coza-gold-light);
+  transform: scale(1.35);
+  z-index: 1001 !important;
+  animation: coza-marker-pulse 1.8s infinite ease-in-out;
+}
+
+/**
+ * @element coza-marker-core
+ */
+.coza-marker-core {
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+/**
+ * @keyframes coza-marker-pulse
+ */
+@keyframes coza-marker-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.8), 0 0 0 0 rgba(75, 0, 130, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(212, 175, 55, 0), 0 0 0 22px rgba(75, 0, 130, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0), 0 0 0 0 rgba(75, 0, 130, 0);
+  }
+}
+
+/**
+ * @section Zoom-Aware Marker Scaling
+ */
+/* Low Zoom (Global View: Zoom < 4) */
+.leaflet-zoom-low .coza-marker {
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  margin-top: -9px;
+  border-width: 1.5px;
+}
+.leaflet-zoom-low .coza-marker-core {
+  width: 5px;
+  height: 5px;
+}
+
+/* Medium Zoom (Country View: Zoom 4-7) */
+.leaflet-zoom-mid .coza-marker {
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  margin-top: -14px;
+}
+
+/* High Zoom (City View: Zoom > 7) */
+.leaflet-zoom-high .coza-marker {
+  width: 36px;
+  height: 36px;
+  margin-left: -18px;
+  margin-top: -18px;
+  border-width: 2.5px;
+}
+.leaflet-zoom-high .coza-marker-core {
+  width: 10px;
+  height: 10px;
+}
+
+/* ------------------------------------------------------------
+   HEATMAP LAYER OVERRIDES
+   ------------------------------------------------------------ */
+
+/**
+ * @section Heatmap Canvas & Gradient Density
+ */
+.leaflet-heatmap-layer {
+  opacity: 0.78;
+  mix-blend-mode: screen;
+  transition: opacity var(--transition-smooth);
+  pointer-events: none;
+}
+
+.coza-heatmap-active {
+  opacity: 0.88;
+  filter: contrast(1.15) saturate(1.2);
+}
+
+/**
+ * @component HeatmapLegend
+ */
+.coza-heatmap-legend {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--glass-backdrop-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #ffffff;
+  font-size: 0.75rem;
+  box-shadow: var(--glass-shadow);
+}
+
+.coza-heatmap-gradient-bar,
+.coza-map-legend-gradient {
+  height: 8px;
+  width: 140px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    var(--heatmap-stop-low),
+    var(--heatmap-stop-mid),
+    var(--heatmap-stop-high),
+    var(--heatmap-stop-peak)
+  );
+  margin-top: 6px;
+}
+
+/* ------------------------------------------------------------
+   ZOOM IN & ZOOM OUT CONTROLS
+   ------------------------------------------------------------ */
+
+/**
+ * @component MapZoomControls
+ */
+.leaflet-control-zoom {
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: var(--glass-shadow) !important;
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--glass-backdrop-blur));
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  background-color: transparent !important;
+  color: var(--coza-gold-light) !important;
+  border: none !important;
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  transition: all var(--transition-fast) !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaflet-control-zoom-in {
+  border-bottom: 1px solid var(--glass-border) !important;
+}
+
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background-color: rgba(75, 0, 130, 0.45) !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 6px var(--coza-gold-primary);
+}
+
+.leaflet-control-zoom-disabled {
+  color: rgba(255, 255, 255, 0.25) !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  cursor: not-allowed !important;
+}
+
+/* ------------------------------------------------------------
+   LEAFLET CONTAINER & POPUP OVERRIDES
+   ------------------------------------------------------------ */
+
+.analytics-dashboard-root .leaflet-container {
+  font-family: var(--font-outfit), sans-serif;
+  background-color: var(--coza-surface-soft) !important;
+  outline: none;
+}
+
+.dark .analytics-dashboard-root .leaflet-container {
+  background-color: #130e19 !important;
+}
+
+.analytics-dashboard-root .leaflet-popup-content-wrapper {
+  background: var(--coza-surface) !important;
+  color: var(--coza-text-primary) !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--coza-primary-border) !important;
+  box-shadow: var(--shadow-theme-md) !important;
+  padding: 4px !important;
+}
+
+.dark .analytics-dashboard-root .leaflet-popup-content-wrapper {
+  background: #211a2a !important;
+  color: #ffffff !important;
+  border-color: rgba(168, 117, 255, 0.25) !important;
+}
+
+.analytics-dashboard-root .leaflet-popup-tip {
+  background: var(--coza-surface) !important;
+}
+
+.dark .analytics-dashboard-root .leaflet-popup-tip {
+  background: #211a2a !important;
+}
+
+
+/* ============================================================
+   18. ACCESSIBILITY & REDUCED MOTION
+   ============================================================ */
+
+/**
+ * @description
+ * Respects operating-system accessibility preferences.
+ */
+@media (prefers-reduced-motion: reduce) {
+
+  .analytics-dashboard-root *,
+  .analytics-dashboard-root *::before,
+  .analytics-dashboard-root *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+
+
+/* ============================================================
+   19. LIGHT-MODE REVAMP (v3.0)
+   ============================================================
+
+   LIGHT MODE ONLY. Every selector below is scoped with
+   `:root:not(.dark)` / `html:not(.dark)`, so the dark theme is
+   untouched. The block is un-layered, so it overrides the
+   @utility rules above without needing !important.
+
+   Direction: "ivory & royal". A warm porcelain canvas with a soft
+   lavender + champagne-gold wash, crisp white cards with hairline
+   lavender borders and layered violet shadows, a purple->gold
+   signature edge, and darker, higher-contrast text.
+   ============================================================ */
+
+:root:not(.dark) {
+  /* Legibility: darker secondary / muted text (WCAG AA on white) */
+  --coza-text-primary: #1a1325;
+  --coza-text-secondary: #463d54;
+  --coza-text-muted: #61576f;
+
+  --coza-surface: #ffffff;
+  --coza-surface-soft: #faf8ff;
+  --coza-surface-muted: #f2eefb;
+
+  --coza-border: #e6def5;
+  --coza-primary-soft: rgba(122, 63, 240, 0.08);
+  --coza-primary-border: rgba(122, 63, 240, 0.24);
+
+  /* Light-only design tokens */
+  --lm-canvas: #f6f3fc;
+  --lm-card-shadow:
+    0 1px 2px rgba(60, 33, 107, 0.05),
+    0 6px 18px -6px rgba(157, 129, 216, 0.1),
+    0 18px 40px -18px rgba(199, 186, 226, 0.14);
+  --lm-card-shadow-hover:
+    0 2px 4px rgba(40, 16, 82, 0.06),
+    0 12px 28px -8px rgba(88, 40, 190, 0.18),
+    0 28px 56px -22px rgba(88, 40, 190, 0.24);
+  --lm-edge: linear-gradient(90deg, #7a3ff0 0%, #a875ff 55%, #e9ad2c 100%);
+}
+
+/* ---------- Canvas ---------- */
+html:not(.dark):has(.analytics-dashboard-root),
+body:not(.dark):has(.analytics-dashboard-root) {
+  background-color: var(--lm-canvas) !important;
+}
+
+html:not(.dark) .analytics-dashboard-root {
+  background:
+    radial-gradient(900px 480px at 100% -5%, rgba(122, 63, 240, 0.13), transparent 62%),
+    radial-gradient(760px 420px at -5% 8%, rgba(233, 173, 44, 0.12), transparent 60%),
+    radial-gradient(900px 600px at 50% 115%, rgba(16, 185, 129, 0.06), transparent 65%),
+    var(--lm-canvas);
+  color: var(--coza-text-primary);
+}
+
+/* ---------- Header: frosted white with a gold-violet underline ---------- */
+html:not(.dark) .coza-header-glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 246, 255, 0.84));
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid rgba(122, 63, 240, 0.14);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 10px 30px -18px rgba(88, 40, 190, 0.28);
+  /* Keep the header sticky in light mode too. `sticky` is a positioned
+     value, so the ::after gradient edge below still anchors to it.
+     (This was `position: relative`, which overrode the utility's sticky.) */
+  position: sticky;
+  top: 0;
+}
+
+html:not(.dark) .coza-header-glass::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--lm-edge);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ---------- Sidebar: porcelain glass, gradient active pill ---------- */
+html:not(.dark) .coza-sidebar-glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 243, 255, 0.94) 55%, rgba(255, 249, 235, 0.92) 100%);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  border-right: 1px solid rgba(122, 63, 240, 0.14);
+  box-shadow: 8px 0 40px -24px rgba(88, 40, 190, 0.35);
+}
+
+html:not(.dark) .coza-sidebar-link-divider {
+  border-bottom-color: transparent;
+}
+
+html:not(.dark) .coza-menu-item-inactive {
+  color: var(--coza-text-secondary);
+  border-radius: 0.85rem;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+html:not(.dark) .coza-menu-item-inactive:hover {
+  background: rgba(122, 63, 240, 0.08);
+  color: #4a1fb0;
+  transform: translateX(2px);
+}
+
+html:not(.dark) .coza-menu-item-active {
+  color: #ffffff;
+  border-radius: 0.85rem;
+  background: linear-gradient(135deg, #6828d9 0%, #8b5cf6 62%, #c98f1d 130%);
+  box-shadow:
+    0 8px 20px -6px rgba(104, 40, 217, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.25) inset;
+}
+
+html:not(.dark) .coza-menu-item-icon-active {
+  color: #ffffff;
+}
+
+html:not(.dark) .coza-menu-item-icon-inactive {
+  color: #7a3ff0;
+}
+
+/* ---------- Cards: crisp white, layered violet shadow, signature edge ---------- */
+html:not(.dark) .analytics-card {
+  position: relative;
+  background: linear-gradient(180deg, #ffffff 0%, #fdfcff 100%);
+  border: 1px solid var(--coza-border);
+  border-radius: 1.15rem;
+  box-shadow: var(--lm-card-shadow);
+  transition: box-shadow 260ms ease, transform 260ms ease, border-color 260ms ease;
+}
+
+html:not(.dark) .analytics-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: 1.15rem 1.15rem 0 0;
+  background: var(--lm-edge);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+html:not(.dark) .analytics-card:hover {
+  box-shadow: var(--lm-card-shadow-hover);
+  border-color: rgba(122, 63, 240, 0.28);
+  transform: translateY(-2px);
+}
+
+html:not(.dark) .analytics-card-title {
+  color: var(--coza-text-primary);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+html:not(.dark) .analytics-chart-placeholder {
+  color: var(--coza-text-muted);
+  background:
+    repeating-linear-gradient(45deg, rgba(122, 63, 240, 0.035) 0 10px, transparent 10px 20px);
+  border-radius: 0.9rem;
+}
+
+/* ---------- Charts ---------- */
+html:not(.dark) .apexcharts-gridline {
+  stroke: rgba(122, 63, 240, 0.10) !important;
+}
+
+html:not(.dark) .apexcharts-text,
+html:not(.dark) .apexcharts-legend-text {
+  fill: #463d54 !important;
+  color: #463d54 !important;
+}
+
+html:not(.dark) .apexcharts-tooltip.apexcharts-theme-light {
+  border: 1px solid rgba(122, 63, 240, 0.2) !important;
+  border-radius: 0.9rem !important;
+  box-shadow: 0 16px 36px -12px rgba(88, 40, 190, 0.3) !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* ---------- Form controls ---------- */
+html:not(.dark) .coza-select-standout,
+html:not(.dark) .coza-date-input {
+  background-color: #ffffff;
+  background-image: linear-gradient(135deg, rgba(122, 63, 240, 0.05), rgba(233, 173, 44, 0.09));
+  border: 1px solid rgba(122, 63, 240, 0.28);
+  border-radius: 0.8rem;
+  color: var(--coza-text-primary);
+  box-shadow: 0 1px 2px rgba(40, 16, 82, 0.05);
+}
+
+html:not(.dark) .coza-select-standout:hover,
+html:not(.dark) .coza-date-input:hover {
+  border-color: #7a3ff0;
+  box-shadow: 0 8px 20px -10px rgba(122, 63, 240, 0.45);
+}
+
+html:not(.dark) .coza-select-standout:focus,
+html:not(.dark) .coza-date-input:focus {
+  border-color: #7a3ff0;
+  box-shadow: 0 0 0 4px rgba(122, 63, 240, 0.14), 0 10px 24px -12px rgba(233, 173, 44, 0.5);
+}
+
+html:not(.dark) .analytics-dashboard-root input[type="search"] {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(122, 63, 240, 0.26);
+}
+
+/* ---------- Tables ---------- */
+html:not(.dark) .coza-table-grid-wrapper {
+  border-color: var(--coza-border);
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgba(40, 16, 82, 0.04);
+}
+
+html:not(.dark) .coza-table-grid-head th {
+  background: linear-gradient(180deg, #f3edff 0%, #ece3ff 100%);
+  color: #3a1f78;
+  border-bottom: 1px solid rgba(122, 63, 240, 0.2);
+  letter-spacing: 0.08em;
+}
+
+html:not(.dark) .coza-table-grid-row {
+  background: #ffffff;
+}
+
+html:not(.dark) .coza-table-grid-row:nth-child(even) {
+  background: #faf7ff;
+}
+
+html:not(.dark) .coza-table-grid-row:hover {
+  background: linear-gradient(90deg, rgba(122, 63, 240, 0.09), rgba(233, 173, 44, 0.07));
+}
+
+html:not(.dark) .coza-table-grid-row td {
+  border-bottom-color: rgba(122, 63, 240, 0.08);
+}
+
+/* ---------- KPI cards (light surfaces get more depth) ---------- */
+html:not(.dark) .analytics-dashboard-root article.rounded-2xl {
+  box-shadow: var(--lm-card-shadow);
+  backdrop-filter: saturate(70%);
+}
+
+html:not(.dark) .analytics-dashboard-root article.rounded-2xl:hover {
+  box-shadow: var(--lm-card-shadow-hover);
+}
+
+html:not(.dark) .analytics-dashboard-root article.rounded-2xl h3 {
+  color: #150f1f;
+}
+
+/* ---------- Filter bar section + pills ---------- */
+html:not(.dark) .analytics-dashboard-root section.rounded-2xl.border {
+  border-color: var(--coza-border);
+  box-shadow: var(--lm-card-shadow);
+}
+
+/* ---------- Status & info chips ---------- */
+html:not(.dark) .analytics-status-primary {
+  color: #5520b5;
+  background: rgba(122, 63, 240, 0.10);
+}
+
+html:not(.dark) .analytics-status-success {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+html:not(.dark) .analytics-status-gold {
+  color: #8a5710;
+  background: rgba(233, 173, 44, 0.18);
+}
+
+html:not(.dark) .analytics-refresh-indicator {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(122, 63, 240, 0.25);
+  box-shadow: 0 18px 40px -14px rgba(88, 40, 190, 0.35);
+}
+
+/* ---------- Scrollbars ---------- */
+html:not(.dark) .analytics-dashboard-root ::-webkit-scrollbar-thumb {
+  background: rgba(122, 63, 240, 0.28);
+  border-radius: 9999px;
+}
+
+/* ---------- Footer ---------- */
+html:not(.dark) .analytics-dashboard-root footer {
+  border-top: 1px solid rgba(122, 63, 240, 0.16);
+  background: linear-gradient(180deg, transparent, rgba(122, 63, 240, 0.04));
+}
+
+/* ---------- Geo map card (light) ---------- */
+html:not(.dark) .analytics-dashboard-root .leaflet-container {
+  background: #efe9fb;
+  border-radius: 1rem;
+}
+
+html:not(.dark) .analytics-dashboard-root .leaflet-popup-content-wrapper {
+  border-radius: 0.9rem;
+  box-shadow: 0 18px 40px -14px rgba(88, 40, 190, 0.4);
+}
+
+/* Reduced motion: drop the hover lifts */
+@media (prefers-reduced-motion: reduce) {
+  html:not(.dark) .analytics-card:hover,
+  html:not(.dark) .coza-menu-item-inactive:hover {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   END OF COZA ANALYTICS DESIGN SYSTEM
+   ============================================================
+ */
