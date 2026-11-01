@@ -144,8 +144,15 @@ class SiteController extends Controller
         // Flat list of every downloadable file for "Download all service assets".
         $downloads = [];
 
-        foreach ($session->sermonNotes as $note) {
-            $downloads[] = ['downloadUrl' => route('sessions.download.note', [$session, $note->id])];
+        $totalNotes = $session->sermonNotes->count();
+        foreach ($session->sermonNotes as $i => $note) {
+            $downloads[] = [
+                'assetType'    => 'sermon_notes',
+                'downloadName' => $totalNotes > 1
+                    ? 'coza-sermon-note-' . ($i + 1)
+                    : 'coza-sermon-notes',
+                'downloadUrl'  => route('sessions.download.note', [$session, $note->id]),
+            ];
         }
         foreach ($session->blessingImages as $i => $blessing) {
             $downloads[] = [
