@@ -51,10 +51,22 @@ class GoogleAnalyticsService
      */
     public function __construct()
     {
-        $client = new Client();
-        $client->setAuthConfig(config('services.ga4.service_account_key_path'));
-        $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
-        $this->analytics = new AnalyticsData($client);
+        $keyPath = config('services.ga4.service_account_key_path');
+
+        if (!empty($keyPath) && file_exists($keyPath)) {
+            try {
+                $client = new Client();
+                $client->setAuthConfig($keyPath);
+                $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
+                $this->analytics = new AnalyticsData($client);
+            } catch (\Throwable $e) {
+                Log::error('Failed to initialize Google Analytics client: ' . $e->getMessage());
+                $this->analytics = null;
+            }
+        } else {
+            Log::warning('GA4 Service Account Key file not found or not configured at: ' . ($keyPath ?: '(empty)'));
+            $this->analytics = null;
+        }
     }
 
     /**
@@ -271,6 +283,11 @@ class GoogleAnalyticsService
             }
 
             // ─── Execute report ────────────────────────────────────────────
+            if (!$this->analytics) {
+                Log::warning('GoogleAnalyticsService: Analytics client is not initialized.');
+                return [];
+            }
+
             try {
                 // Page through the report. GA4 returns at most `limit` rows per
                 // request (10,000 by default) and silently drops the rest, which
@@ -423,6 +440,11 @@ class GoogleAnalyticsService
             $request->setMetrics([$metric]);
             $request->setDimensionFilter($this->groupExpr('and', $conditions));
 
+            if (!$this->analytics) {
+                Log::warning('GoogleAnalyticsService: Analytics client is not initialized.');
+                return 0;
+            }
+
             try {
                 $response = $this->analytics->properties->runReport(
                     'properties/' . config('services.ga4.property_id'),
@@ -570,6 +592,11 @@ class GoogleAnalyticsService
         );
 
         $request->setDimensionFilter($eventFilter);
+
+        if (!$this->analytics) {
+            Log::warning('GoogleAnalyticsService: Analytics client is not initialized.');
+            return [];
+        }
 
         // Execute
         $response = $this->analytics->properties->runReport(
