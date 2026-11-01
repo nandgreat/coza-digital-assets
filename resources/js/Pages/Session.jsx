@@ -18,6 +18,11 @@ export default function Session({ session, resources, downloads }) {
         setBulk({ active: true, done: 0, total: downloads.length });
         await downloadAll(downloads, {
             onProgress: (done, total) => setBulk({ active: true, done, total }),
+            context: {
+                serviceType: session.serviceType,
+                program: session.program.name,
+                session: session.name,
+            },
         });
         setBulk({ active: false, done: 0, total: 0 });
         showToast('All service assets downloaded');

@@ -144,16 +144,32 @@ class SiteController extends Controller
         $downloads = [];
 
         if ($session->sermon_notes_path) {
-            $downloads[] = ['downloadUrl' => route('sessions.download.notes', $session)];
+            $downloads[] = [
+                'assetType'    => 'sermon_notes',
+                'downloadName' => 'Sermon Notes',
+                'downloadUrl'  => route('sessions.download.notes', $session),
+            ];
         }
-        foreach ($session->blessingImages as $blessing) {
-            $downloads[] = ['downloadUrl' => route('sessions.download.blessing', [$session, $blessing->id])];
+        foreach ($session->blessingImages as $i => $blessing) {
+            $downloads[] = [
+                'assetType'    => 'blessing',
+                'downloadName' => 'coza-blessing-' . ($i + 1) . '.jpeg',
+                'downloadUrl'  => route('sessions.download.blessing', [$session, $blessing->id]),
+            ];
         }
-        foreach ($session->quoteImages as $quote) {
-            $downloads[] = ['downloadUrl' => route('sessions.download.quote', [$session, $quote->id])];
+        foreach ($session->quoteImages as $i => $quote) {
+            $downloads[] = [
+                'assetType'    => 'quote',
+                'downloadName' => 'coza-quote-' . ($i + 1) . '.jpeg',
+                'downloadUrl'  => route('sessions.download.quote', [$session, $quote->id]),
+            ];
         }
-        foreach ($session->prophecyImages as $prophecy) {
-            $downloads[] = ['downloadUrl' => route('sessions.download.prophecy', [$session, $prophecy->id])];
+        foreach ($session->prophecyImages as $i => $prophecy) {
+            $downloads[] = [
+                'assetType'    => 'prophecy',
+                'downloadName' => 'coza-prophecy-' . ($i + 1) . '.jpeg',
+                'downloadUrl'  => route('sessions.download.prophecy', [$session, $prophecy->id]),
+            ];
         }
 
         return Inertia::render('Session', [

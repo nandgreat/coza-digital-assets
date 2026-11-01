@@ -1,0 +1,386 @@
+<?php
+
+/**
+ * Laravel Debugbar Configuration
+ *
+ * This file configures the Barryvdh\Debugbar package, which provides
+ * a real‑time debugging toolbar for Laravel applications.
+ *
+ * The toolbar shows:
+ * - Executed SQL queries with execution time
+ * - Memory usage
+ * - Request/response details
+ * - Routes and middleware
+ * - Exceptions and logs
+ * - Views rendered
+ *
+ * @see https://github.com/barryvdh/laravel-debugbar
+ * @see https://laravel-debugbar.com/
+ */
+
+return [
+
+    /*
+     |--------------------------------------------------------------------------
+     | Debugbar Enabled
+     |--------------------------------------------------------------------------
+     |
+     | Enable or disable the debugbar entirely.
+     | In production, this should be false (or controlled by environment).
+     |
+     | You can override this in .env with: DEBUGBAR_ENABLED=true|false
+     */
+    'enabled' => env('DEBUGBAR_ENABLED', env('APP_DEBUG', false)),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Storage Settings
+     |--------------------------------------------------------------------------
+     |
+     | Configure where debug data is stored.
+     |
+     | Supported drivers:
+     |   - 'file'   : Store JSON files in the configured path.
+     |   - 'redis'  : Store in Redis (requires Redis connection).
+     |   - 'pdo'    : Store in database (requires a PDO connection).
+     |
+     | The 'path' is only used when driver is 'file'.
+     */
+    'storage' => [
+        'enabled' => true, // Enable storage (persist debug data across requests)
+        'driver'  => 'file', // 'file', 'redis', or 'pdo'
+
+        /**
+         * File storage path – must be writable by the web server.
+         * The default is storage_path('debugbar').
+         * If the directory doesn't exist, Laravel will attempt to create it.
+         */
+        'path' => storage_path('debugbar'),
+
+        /**
+         * Connection name for 'redis' or 'pdo' drivers.
+         * Leave null to use the default connection.
+         */
+        'connection' => null,
+
+        /**
+         * Provider for 'pdo' driver – must implement StorageInterface.
+         * Use 'Illuminate\Support\Facades\DB' or a custom provider.
+         */
+        'provider' => null,
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Collector Configuration
+     |--------------------------------------------------------------------------
+     |
+     | Enable or disable specific collectors.
+     | Disabling collectors improves performance but reduces debug information.
+     */
+    'collectors' => [
+
+        /**
+         * Query collector – shows all SQL queries.
+         * Extremely useful for debugging N+1 issues.
+         */
+        'queries' => true,
+
+        /**
+         * Eloquent model events and operations.
+         */
+        'models' => true,
+
+        /**
+         * Route matching and parameters.
+         */
+        'route' => true,
+
+        /**
+         * View rendering and data passed to views.
+         */
+        'views' => true,
+
+        /**
+         * Request data (GET, POST, headers, cookies).
+         */
+        'request' => true,
+
+        /**
+         * Session data.
+         */
+        'session' => true,
+
+        /**
+         * Logged messages (from Log::info(), etc.).
+         */
+        'log' => true,
+
+        /**
+         * Application events dispatched.
+         */
+        'events' => true,
+
+        /**
+         * Memory usage and peak memory.
+         */
+        'memory' => true,
+
+        /**
+         * Exceptions thrown during the request.
+         */
+        'exceptions' => true,
+
+        /**
+         * Time taken to execute the request (total execution time).
+         */
+        'timeline' => true,
+
+        /**
+         * PHP configuration settings (ini_get() values).
+         */
+        'config' => true,
+
+        /**
+         * Environment variables.
+         */
+        'env' => true,
+
+        /**
+         * Authenticated user (if any).
+         */
+        'auth' => true,
+
+        /**
+         * Gate/Policy checks.
+         */
+        'gate' => true,
+
+        /**
+         * Jobs dispatched to the queue.
+         */
+        'jobs' => true,
+
+        /**
+         * Cache operations (get, put, forget, etc.).
+         */
+        'cache' => true,
+
+        /**
+         * HTTP Client requests (Guzzle, etc.).
+         */
+        'http_client' => true,
+
+        /**
+         * Laravel Telescope integration (if installed).
+         */
+        'telescope' => false,
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Query Collector Options
+     |--------------------------------------------------------------------------
+     */
+    'options' => [
+
+        /**
+         * Query collector options.
+         */
+        'queries' => [
+
+            /**
+             * Show query bindings (parameter values) in the toolbar.
+             * Useful for debugging, but may expose sensitive data.
+             */
+            'bindings' => true,
+
+            /**
+             * Show the line of code where the query was executed.
+             * Helps track down the source of slow queries.
+             */
+            'backtrace' => true,
+
+            /**
+             * Enable query analysis (explain queries).
+             * This may slow down the application; use with caution.
+             */
+            'explain' => false,
+
+            /**
+             * Highlight slow queries (in ms).
+             * Queries slower than this will be highlighted in the toolbar.
+             */
+            'slow_threshold' => 100, // milliseconds
+        ],
+
+        /**
+         * Cache collector options.
+         */
+        'cache' => [
+            /**
+             * Show cache get/put operations with values.
+             * May expose sensitive data; disable in production.
+             */
+            'values' => true,
+        ],
+
+        /**
+         * Log collector options.
+         */
+        'log' => [
+            /**
+             * Show log messages in the toolbar.
+             * This is always recommended for debugging.
+             */
+            'messages' => true,
+        ],
+
+        /**
+         * View collector options.
+         */
+        'views' => [
+            /**
+             * Show view data (the variables passed to views).
+             * May expose sensitive data; disable in production.
+             */
+            'data' => true,
+        ],
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Inject Scripts
+     |--------------------------------------------------------------------------
+     |
+     | If false, the debugbar scripts are not injected automatically.
+     | You can manually call Debugbar::init() in your layout if needed.
+     */
+    'inject' => true,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Force HTTPS
+     |--------------------------------------------------------------------------
+     |
+     | Set to true if your application uses HTTPS and the debugbar is not loading.
+     | This ensures assets are loaded via HTTPS.
+     */
+    'force_https' => env('DEBUGBAR_FORCE_HTTPS', false),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Capture Ajax Requests
+     |--------------------------------------------------------------------------
+     |
+     | If true, the debugbar will also capture AJAX requests.
+     | The toolbar will be available in the X-Debugbar-Link header.
+     */
+    'capture_ajax' => true,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Add Debugbar Link to JSON Responses
+     |--------------------------------------------------------------------------
+     |
+     | If true, the debugbar will add a X-Debugbar-Link header to JSON responses.
+     | Useful for debugging API endpoints.
+     */
+    'add_link_to_json' => true,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Open Handler
+     |--------------------------------------------------------------------------
+     |
+     | Configure the debugbar's Open Handler – the endpoint that serves stored
+     | debug data when you click on a past request in the toolbar.
+     */
+    'open_handler' => [
+        /**
+         * URL to the open handler route.
+         * Default is the route registered by the package.
+         */
+        'url' => null,
+
+        /**
+         * URI to the open handler.
+         * Change if you customise the route.
+         */
+        'uri' => '_debugbar/open',
+
+        /**
+         * HTTP method for the open handler.
+         */
+        'method' => 'GET',
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Exclude Routes
+     |--------------------------------------------------------------------------
+     |
+     | List of routes that should NOT show the debugbar.
+     | Useful to exclude API endpoints, health checks, or assets.
+     */
+    'exclude' => [
+        'telescope*', // Exclude Telescope routes
+        'horizon*',   // Exclude Horizon routes
+        'admin/*',    // Exclude admin routes (optional)
+        '_debugbar/*', // Exclude debugbar's own routes
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Custom Data
+     |--------------------------------------------------------------------------
+     |
+     | Add custom data to the debugbar.
+     | You can also use Debugbar::info(), Debugbar::error(), etc.
+     | in your code.
+     */
+    'custom' => [
+        // Example: 'my_key' => 'my_value',
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Enable Remote Debugging
+     |--------------------------------------------------------------------------
+     |
+     | If true, the debugbar will accept remote requests to query debug data.
+     | This is useful for debugging production issues, but use with caution.
+     */
+    'remote' => [
+        'enabled' => false,
+        'host' => null,
+        'port' => null,
+        'prefix' => null,
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Custom Views
+     |--------------------------------------------------------------------------
+     |
+     | Path to custom debugbar views.
+     | You can publish the default views and customise them.
+     */
+    'views' => [
+        'base' => 'debugbar::base',
+        'javascript' => 'debugbar::javascript',
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Debugbar Middleware
+     |--------------------------------------------------------------------------
+     |
+     | Middleware that will be applied to the debugbar routes.
+     */
+    'middleware' => [
+        'web',
+        'auth', // If you want to protect debugbar with authentication
+    ],
+
+];
