@@ -15,7 +15,7 @@ export default function LineChart({ labels, data, label = 'Downloads', showFill 
                     datasets: [{
                         label,
                         data,
-                        borderColor: '#7C3AED', // purple-600
+                        borderColor: '#a2713a', // coza-purple-600
                         backgroundColor: showFill ? 'rgba(124,58,237,0.1)' : 'transparent',
                         fill: showFill,
                         tension: 0.4,
@@ -36,8 +36,8 @@ export default function LineChart({ labels, data, label = 'Downloads', showFill 
                         },
                         tooltip: {
                             backgroundColor: 'rgba(255,255,255,0.8)',
-                            titleColor: '#4C1D95',
-                            bodyColor: '#4C1D95',
+                            titleColor: '#543923',
+                            bodyColor: '#543923',
                             borderColor: 'rgba(124,58,237,0.3)',
                             borderWidth: 1,
                             cornerRadius: 12,
@@ -51,7 +51,7 @@ export default function LineChart({ labels, data, label = 'Downloads', showFill 
                                 color: 'rgba(124,58,237,0.08)',
                             },
                             ticks: {
-                                color: '#4C1D95',
+                                color: '#543923',
                             }
                         },
                         x: {

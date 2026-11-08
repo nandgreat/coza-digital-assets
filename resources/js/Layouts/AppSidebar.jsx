@@ -154,36 +154,36 @@ export default function AppSidebar() {
                 <Link href="/analytics" className="flex min-w-0 items-center">
                     {showLabels ? (
                         <img
-                            src="/images/logo/coza-logo.svg"
+                            src="/images/logo/renewing-strength.png"
                             alt="COZA Digital Assets"
-                            width="70"
-                            height="70"
-                            className="max-w-42.5 dark:hidden"
+                            width="150"
+                            height="110"
+                            className="max-h-16 w-auto object-contain dark:hidden"
                         />
                     ) : (
                         <img
-                            src="/images/logo/coza-logo-icon.svg"
+                            src="/images/logo/renewing-strength.png"
                             alt="COZA Digital Assets"
                             width="50"
-                            height="50"
+                            height="37"
                             className="dark:hidden"
                         />
                     )}
 
                     {showLabels ? (
                         <img
-                            src="/images/logo/coza-logo.svg"
+                            src="/images/logo/renewing-strength.png"
                             alt="COZA Digital Assets"
-                            width="70"
-                            height="70"
-                            className="hidden max-w-42.5 dark:block"
+                            width="150"
+                            height="110"
+                            className="hidden max-h-16 w-auto object-contain dark:block"
                         />
                     ) : (
                         <img
-                            src="/images/logo/coza-logo-icon.svg"
+                            src="/images/logo/renewing-strength.png"
                             alt="COZA Digital Assets"
                             width="50"
-                            height="50"
+                            height="37"
                             className="hidden dark:block"
                         />
                     )}

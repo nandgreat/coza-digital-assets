@@ -11,10 +11,10 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --gold: #d4af37;
-  --gold-light: #f1d97a;
-  --navy: #0b0f1f;
-  --navy-2: #141a33;
+  --gold: #b8864b;
+  --gold-light: #e0c49c;
+  --navy: #050505;
+  --navy-2: #14100a;
   --white: #ffffff;
   --muted: #b9bdd1;
   --teal: #1a6b6b;
@@ -49,17 +49,15 @@ footer strong {
 
 /* Logo (used by AnalyticsLoginLayout) */
 .coza-logo-analytics {
-  width: 110px;
-  height: 110px;
+  width: 220px;
+  max-width: 70vw;
   margin: 0 auto 18px;
-  border-radius: 50%;
-  overflow: hidden;
 }
 
 .coza-logo-analytics img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   display: block;
 }
 
@@ -149,7 +147,7 @@ footer strong {
 }
 
 .analytics-btn {
-  background: linear-gradient(to right, #9333ea, #f59e0b);
+  background: linear-gradient(to right, #a2713a, #f59e0b);
   color: var(--navy);
   border: none;
   padding: 10px 20px;
@@ -163,8 +161,8 @@ footer strong {
 }
 
 .analytics-btn:hover {
-  background: linear-gradient(135deg, #f1d97a, #d4af37);
-  border-color: #d4af37;
+  background: linear-gradient(135deg, #e0c49c, #b8864b);
+  border-color: #b8864b;
   color: #1a1a2e;
   font-weight: 800;
   font-size: 13px;

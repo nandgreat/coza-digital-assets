@@ -16,11 +16,11 @@ export default function DoughnutChart({ labels, data, label = 'Downloads' }) {
                         label,
                         data,
                         backgroundColor: [
-                            '#7C3AED', // purple-600
-                            '#A78BFA', // purple-400
+                            '#a2713a', // coza-purple-600
+                            '#c39656', // coza-purple-400
                             '#D4AF37', // gold
                             '#FCD34D', // amber-300
-                            '#C4B5FD', // purple-300
+                            '#d3aa75', // coza-purple-300
                             '#FBBF24', // amber-400
                         ],
                         borderColor: 'rgba(255,255,255,0.4)',
@@ -38,7 +38,7 @@ export default function DoughnutChart({ labels, data, label = 'Downloads' }) {
                                 usePointStyle: true,
                                 pointStyle: 'circle',
                                 padding: 20,
-                                color: '#4C1D95', // purple-900
+                                color: '#543923', // coza-purple-900
                                 font: { size: 12 },
                             }
                         }

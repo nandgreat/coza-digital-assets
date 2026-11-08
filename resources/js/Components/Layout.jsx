@@ -11,9 +11,8 @@ export default function Layout({ backHref, backLabel, tagline = 'Digital Service
 
             <header>
                 <div className="logo-row">
-                    <img className="coza-badge" src="/images/coza_logo.png" alt="COZA" />
                     <div className="logo-badge takeover-badge">
-                        <img src="/images/takeover_logo.png" alt="Takeover — Revelation 11:15" />
+                        <img src="/images/logo/renewing-strength.png" alt="COZA — Renewing Your Strength, Isaiah 40:31" />
                     </div>
                 </div>
                 <div className="cgls-stripe" />

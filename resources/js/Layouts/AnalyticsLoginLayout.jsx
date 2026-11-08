@@ -8,7 +8,7 @@ export default function AnalyticsLoginLayout({ tagline = 'Analytics', headerExtr
             
                 <header>
                     <div className="coza-logo-analytics">
-                        <img src="/images/coza_logo.png" alt="COZA Logo" />
+                        <img src="/images/logo/renewing-strength.png" alt="COZA Renewing Your Strength — Isaiah 40:31" />
                     </div>
                     <h1 className="text-3xl text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-amber-500">
                         ANALYTICS DASHBOARD

@@ -70,7 +70,7 @@ export default function UniqueUsersTrendChart({ data = [] }) {
      * SVG renderer does not reliably resolve `var(--...)` at draw time.
      */
     const options = useMemo(() => {
-        const purple = isDark ? '#a875ff' : '#7a3ff0'; // --coza-primary (dark / light)
+        const purple = isDark ? '#c39656' : '#a2713a'; // --coza-primary (dark / light)
         const textColor = isDark ? '#d5cfdd' : '#5b5266'; // --coza-text-secondary
         const borderColor = isDark ? 'rgba(255, 255, 255, 0.09)' : '#e5e1eb'; // --coza-border
 

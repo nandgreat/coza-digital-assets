@@ -19,7 +19,7 @@ import React, { useMemo } from 'react';
 import { Info, Users } from 'lucide-react';
 
 /** COZA brand hues, interleaved so neighbouring bars stay distinct. */
-const BAR_COLORS = ['#10b981', '#7a3ff0', '#e9ad2c', '#34d399', '#a875ff', '#ffd052'];
+const BAR_COLORS = ['#10b981', '#a2713a', '#e9ad2c', '#34d399', '#c39656', '#ffd052'];
 
 const formatPercent = (value) => `${value >= 10 ? Math.round(value) : value.toFixed(1)}%`;
 

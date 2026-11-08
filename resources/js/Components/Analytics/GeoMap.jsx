@@ -329,7 +329,13 @@ function MapLibreVectorLayer({ styleUrl = VECTOR_TILE_STYLES.voyager }) {
 
         vectorLayer.addTo(map);
 
+        // Surface otherwise-silent MapLibre failures (style, tiles, WebGL) in the console.
+        const glMap = vectorLayer._glMap;
+        const onGlError = (e) => console.error('[GeoMap] MapLibre error:', e?.error?.message || e);
+        glMap?.on('error', onGlError);
+
         return () => {
+            glMap?.off?.('error', onGlError);
             map.removeLayer(vectorLayer);
         };
     }, [map, styleUrl]);
@@ -383,8 +389,8 @@ function HeatmapLayer({ points = [], options = {}, zoom = 2 }) {
         return options.gradient ?? {
             0.15: '#fff9e8', // Soft Gold tint
             0.35: '#ffd052', // COZA Gold (low activity)
-            0.55: '#c09cff', // Soft Amethyst Purple (medium activity)
-            0.75: '#8b5cf6', // COZA Royal Purple (high activity)
+            0.55: '#d3aa75', // Soft Amethyst Purple (medium activity)
+            0.75: '#b8864b', // COZA Royal Purple (high activity)
             1.00: '#461b91', // Deep COZA Purple (very high activity)
         };
     }, [options.gradient]);
@@ -599,19 +605,19 @@ const getCountryMarkerStyle = (value, maxValue, zoom = 2, isSelected = false) =>
     let color = '#d4941c';
 
     if (ratio >= 0.75) {
-        fillColor = '#6828d9';
+        fillColor = '#855a2e';
         color = '#461b91';
     } else if (ratio >= 0.50) {
-        fillColor = '#8b5cf6';
-        color = '#6828d9';
+        fillColor = '#b8864b';
+        color = '#855a2e';
     } else if (ratio >= 0.25) {
-        fillColor = '#c09cff';
-        color = '#8b5cf6';
+        fillColor = '#d3aa75';
+        color = '#b8864b';
     }
 
     if (isSelected) {
         return {
-            fillColor: '#a875ff',
+            fillColor: '#c39656',
             color: '#e9ad2c',
             fillOpacity: 0.95,
             radius: Math.min(responsiveRadius + 3, 16),
@@ -1493,7 +1499,7 @@ export default function GeoMap({
                         key={`selected-country-polygon-${selectedCountry.code || selectedCountry.country}`}
                         data={selectedCountryGeoJson}
                         style={{
-                            fillColor: '#8b5cf6',
+                            fillColor: '#b8864b',
                             fillOpacity: 0.38,
                             color: '#e9ad2c',
                             weight: 2.5,

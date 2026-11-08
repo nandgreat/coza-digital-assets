@@ -75,12 +75,12 @@ export const GlassThemeToggle = ({ currentTheme, onThemeChange }) => {
           absolute left-1 top-1 flex h-8 w-8 items-center justify-center rounded-full
           backdrop-blur-xl border border-white/40 transition-transform duration-300 ease-out
           ${isDark 
-            ? 'translate-x-10 bg-linear-to-br from-purple-500/50 to-indigo-600/70 shadow-[0_0_12px_rgba(168,85,247,0.7)]' 
+            ? 'translate-x-10 bg-linear-to-br from-purple-500/50 to-indigo-600/70 shadow-[0_0_12px_rgba(184,134,75,0.7)]' 
             : 'translate-x-0 bg-linear-to-br from-amber-300/70 to-orange-400/60 shadow-[0_0_12px_rgba(245,158,11,0.6)]'}
         `}
       >
         {isDark ? (
-          <Moon className="h-4 w-4 text-purple-100 drop-shadow-[0_0_4px_rgba(168,85,247,0.8)]" />
+          <Moon className="h-4 w-4 text-purple-100 drop-shadow-[0_0_4px_rgba(184,134,75,0.8)]" />
         ) : (
           <Sun className="h-4 w-4 text-amber-950 drop-shadow-[0_0_4px_rgba(245,158,11,0.8)]" />
         )}

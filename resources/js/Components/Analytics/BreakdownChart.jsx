@@ -29,16 +29,16 @@ import { Info, Users } from 'lucide-react';
  * @type {string[]}
  */
 const COLORS = [
-    '#7a3ff0', // coza-purple-600
+    '#a2713a', // coza-purple-600
     '#e9ad2c', // coza-gold-500
     '#10b981', // coza-emerald-500
-    '#a875ff', // coza-purple-400
+    '#c39656', // coza-purple-400
     '#ffd052', // coza-gold-300
     '#34d399', // coza-emerald-400
     '#5520b5', // coza-purple-800
     '#b87516', // coza-gold-700
     '#047857', // coza-emerald-700
-    '#c09cff', // coza-purple-300
+    '#d3aa75', // coza-purple-300
 ];
 
 /**
@@ -49,7 +49,7 @@ const COLORS = [
  * @type {Readonly<Record<'purple' | 'gold' | 'emerald', number>>}
  */
 const ACCENT_START_INDEX = Object.freeze({
-    purple: 0, // '#7a3ff0'
+    purple: 0, // '#a2713a'
     gold: 1,   // '#e9ad2c'
     emerald: 2, // '#10b981'
 });

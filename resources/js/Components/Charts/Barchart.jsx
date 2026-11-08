@@ -15,7 +15,7 @@ export default function BarChart({ labels, data, label = 'Downloads' }) {
                     datasets: [{
                         label,
                         data,
-                        backgroundColor: ['#7C3AED', '#A78BFA', '#D4AF37', '#FCD34D'],
+                        backgroundColor: ['#a2713a', '#c39656', '#D4AF37', '#FCD34D'],
                         borderRadius: 6,
                     }]
                 },

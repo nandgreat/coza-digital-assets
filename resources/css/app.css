@@ -16,13 +16,13 @@
    Design system color tokens and variables for legacy views.
    ============================================================ */
 :root {
-  --gold: #e8911e;
-  --gold-light: #f5cf1e;
-  --navy: #0a0a0c;
-  --navy-2: #17120a;
+  --gold: #b8864b;
+  --gold-light: #e0c49c;
+  --navy: #050505;
+  --navy-2: #14100a;
   --white: #ffffff;
-  --muted: #aab4c3;
-  --teal: #116b6b;
+  --muted: #b5b0a6;
+  --teal: #7a5230;
 
   /* CGLS brand palette (added from app1.css) */
   --cgls-orange: #f0921e;

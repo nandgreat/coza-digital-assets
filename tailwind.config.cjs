@@ -12,10 +12,10 @@ module.exports = {
   theme: { 
     extend: {
         colors: {
-            'navy': '#0b0f1f',
-            'navy-2': '#141a33',
-            'gold': '#d4af37',
-            'gold-light': '#f1d97a',
+            'navy': '#050505',
+            'navy-2': '#14100a',
+            'gold': '#b8864b',
+            'gold-light': '#e0c49c',
             'muted': '#b9bdd1',
         }
   } 

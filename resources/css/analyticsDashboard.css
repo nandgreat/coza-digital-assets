@@ -16,7 +16,7 @@
  *   Commonwealth of Zion Assembly (COZA)
  *
  * @brandColors
- *   Royal Purple  — Primary brand identity (#7a3ff0 / #4b0082)
+ *   Bronze (Renewing Your Strength)  — Primary brand identity (#a2713a / #7a5230)
  *   Gold          — Premium / emphasis / achievement (#e9ad2c / #d4af37)
  *   Emerald Green — Success / growth / positive analytics (#10b981)
  *   White         — Clean surfaces / contrast
@@ -101,21 +101,21 @@
   --breakpoint-3xl: 2000px;
 
   /* ----------------------------------------------------------
-     COZA Royal Purple
+     COZA Bronze (Renewing Your Strength)
      ---------------------------------------------------------- */
 
-  --color-coza-purple-25:  #faf8ff;
-  --color-coza-purple-50:  #f5f0ff;
-  --color-coza-purple-100: #ebe0ff;
-  --color-coza-purple-200: #dac5ff;
-  --color-coza-purple-300: #c09cff;
-  --color-coza-purple-400: #a875ff;
-  --color-coza-purple-500: #8b5cf6;
-  --color-coza-purple-600: #7a3ff0;
-  --color-coza-purple-700: #6828d9;
-  --color-coza-purple-800: #5520b5;
-  --color-coza-purple-900: #461b91;
-  --color-coza-purple-950: #281052;
+  --color-coza-purple-25:  #fcf9f4;
+  --color-coza-purple-50:  #f8f1e7;
+  --color-coza-purple-100: #efdfc8;
+  --color-coza-purple-200: #e2c7a0;
+  --color-coza-purple-300: #d3aa75;
+  --color-coza-purple-400: #c39656;
+  --color-coza-purple-500: #b8864b;
+  --color-coza-purple-600: #a2713a;
+  --color-coza-purple-700: #855a2e;
+  --color-coza-purple-800: #6a4727;
+  --color-coza-purple-900: #543923;
+  --color-coza-purple-950: #2e1e12;
 
   /* ----------------------------------------------------------
      COZA Gold
@@ -157,18 +157,18 @@
 
   --color-white: #ffffff;
 
-  --color-gray-25:  #fcfcfd;
-  --color-gray-50:  #f8f7fb;
-  --color-gray-100: #f1eff5;
-  --color-gray-200: #e5e1eb;
-  --color-gray-300: #d5cfdd;
-  --color-gray-400: #aaa2b5;
-  --color-gray-500: #756c80;
-  --color-gray-600: #5b5266;
-  --color-gray-700: #443b4e;
-  --color-gray-800: #30283a;
-  --color-gray-900: #211a2a;
-  --color-gray-950: #130e19;
+  --color-gray-25:  #fcfcfb;
+  --color-gray-50:  #f8f7f5;
+  --color-gray-100: #f0eeea;
+  --color-gray-200: #e4e1db;
+  --color-gray-300: #d2cec6;
+  --color-gray-400: #a29d93;
+  --color-gray-500: #74706a;
+  --color-gray-600: #58544e;
+  --color-gray-700: #403d38;
+  --color-gray-800: #2a2825;
+  --color-gray-900: #1a1917;
+  --color-gray-950: #0d0d0c;
 
   /* ----------------------------------------------------------
      Semantic States
@@ -183,8 +183,8 @@
   --color-error-500: #ef4444;
   --color-error-600: #dc2626;
 
-  --color-info-500: #8b5cf6;
-  --color-info-600: #7a3ff0;
+  --color-info-500: #b8864b;
+  --color-info-600: #a2713a;
 
   /* ----------------------------------------------------------
      Dashboard Typography Scale
@@ -223,7 +223,7 @@
     0 8px 8px -4px rgba(33, 26, 42, 0.04);
 
   --shadow-coza-purple:
-    0 8px 24px rgba(122, 63, 240, 0.20);
+    0 8px 24px rgba(162, 113, 58, 0.20);
 
   --shadow-coza-gold:
     0 8px 24px rgba(233, 173, 44, 0.20);
@@ -236,7 +236,7 @@
      ---------------------------------------------------------- */
 
   --shadow-focus-ring:
-    0 0 0 4px rgba(122, 63, 240, 0.15);
+    0 0 0 4px rgba(162, 113, 58, 0.15);
 
   --z-index-1: 1;
   --z-index-9: 9;
@@ -285,7 +285,7 @@ body:has(.analytics-dashboard-root) {
 
   display: block !important;
 
-  background-color: #f8f7fb !important;
+  background-color: #f8f7f5 !important;
   background-image: none !important;
 }
 
@@ -295,7 +295,7 @@ body:has(.analytics-dashboard-root) {
  */
 html.dark:has(.analytics-dashboard-root),
 body.dark:has(.analytics-dashboard-root) {
-  background-color: #130e19 !important;
+  background-color: #0d0d0c !important;
   background-image: none !important;
 }
 
@@ -317,12 +317,12 @@ body.dark:has(.analytics-dashboard-root) {
   background:
     radial-gradient(
       circle at top right,
-      rgba(122, 63, 240, 0.055),
+      rgba(162, 113, 58, 0.055),
       transparent 28%
     ),
-    #f8f7fb;
+    #f8f7f5;
 
-  color: #30283a;
+  color: #2a2825;
 
   font-family: "Outfit", sans-serif;
 
@@ -347,7 +347,7 @@ body.dark:has(.analytics-dashboard-root) {
       rgba(16, 185, 129, 0.055),
       transparent 25%
     ),
-    #130e19;
+    #0d0d0c;
 
   color: rgba(255, 255, 255, 0.92);
 }
@@ -375,10 +375,10 @@ body.dark:has(.analytics-dashboard-root) {
 :root {
 
   /* Primary Brand */
-  --coza-primary: #7a3ff0;
-  --coza-primary-hover: #6828d9;
-  --coza-primary-soft: rgba(122, 63, 240, 0.10);
-  --coza-primary-border: rgba(122, 63, 240, 0.22);
+  --coza-primary: #a2713a;
+  --coza-primary-hover: #855a2e;
+  --coza-primary-soft: rgba(162, 113, 58, 0.10);
+  --coza-primary-border: rgba(162, 113, 58, 0.22);
 
   /* COZA Gold Palette */
   --coza-gold: #e9ad2c;
@@ -390,11 +390,11 @@ body.dark:has(.analytics-dashboard-root) {
   --coza-gold-dark: #aa820a;
   --coza-gold-glow: rgba(212, 175, 55, 0.4);
 
-  /* COZA Royal Purple Palette */
-  --coza-purple-primary: #4b0082;
-  --coza-purple-light: #7b2cbf;
-  --coza-purple-dark: #240046;
-  --coza-purple-glow: rgba(75, 0, 130, 0.4);
+  /* COZA Bronze (Renewing Your Strength) Palette */
+  --coza-purple-primary: #7a5230;
+  --coza-purple-light: #b8864b;
+  --coza-purple-dark: #1a1208;
+  --coza-purple-glow: rgba(122, 82, 48, 0.4);
 
   /* Emerald */
   --coza-emerald: #10b981;
@@ -405,14 +405,14 @@ body.dark:has(.analytics-dashboard-root) {
   /* Activity Spectrum Tiers (Gold -> Purple) */
   --map-tier-1-color: #fceabb; /* Tier 1: Low Activity */
   --map-tier-2-color: #d4af37; /* Tier 2: Moderate Activity */
-  --map-tier-3-color: #9d4edd; /* Tier 3: High Activity */
-  --map-tier-4-color: #3c096c; /* Tier 4: Peak Activity */
+  --map-tier-3-color: #b8864b; /* Tier 3: High Activity */
+  --map-tier-4-color: #2a1d10; /* Tier 4: Peak Activity */
 
   /* Heatmap Gradient Stops */
   --heatmap-stop-low: rgba(243, 229, 171, 0.25);
   --heatmap-stop-mid: rgba(212, 175, 55, 0.65);
-  --heatmap-stop-high: rgba(123, 44, 191, 0.85);
-  --heatmap-stop-peak: rgba(36, 0, 70, 0.95);
+  --heatmap-stop-high: rgba(184, 134, 75, 0.85);
+  --heatmap-stop-peak: rgba(26, 18, 8, 0.95);
 
   /* Glassmorphism Variables */
   --glass-bg: rgba(15, 23, 42, 0.75);
@@ -424,17 +424,17 @@ body.dark:has(.analytics-dashboard-root) {
 
   /* Surfaces & Content */
   --coza-surface: #ffffff;
-  --coza-surface-soft: #f8f7fb;
-  --coza-surface-muted: #f1eff5;
+  --coza-surface-soft: #f8f7f5;
+  --coza-surface-muted: #f0eeea;
 
-  --coza-text-primary: #211a2a;
+  --coza-text-primary: #1a1917;
   --coza-text-secondary: #5b5266;
-  --coza-text-muted: #756c80;
+  --coza-text-muted: #74706a;
 
-  --coza-border: #e5e1eb;
+  --coza-border: #e4e1db;
 
   --coza-sidebar-start: #21103f;
-  --coza-sidebar-end: #130e19;
+  --coza-sidebar-end: #0d0d0c;
 }
 
 /**
@@ -442,8 +442,8 @@ body.dark:has(.analytics-dashboard-root) {
  * Dark-theme semantic variables.
  */
 .dark {
-  --coza-primary: #a875ff;
-  --coza-primary-hover: #c09cff;
+  --coza-primary: #c39656;
+  --coza-primary-hover: #d3aa75;
   --coza-primary-soft: rgba(168, 117, 255, 0.13);
   --coza-primary-border: rgba(168, 117, 255, 0.25);
 
@@ -457,13 +457,13 @@ body.dark:has(.analytics-dashboard-root) {
   --coza-emerald-soft: rgba(52, 211, 153, 0.12);
   --coza-emerald-border: rgba(52, 211, 153, 0.25);
 
-  --coza-surface: #211a2a;
+  --coza-surface: #1a1917;
   --coza-surface-soft: #18121f;
-  --coza-surface-muted: #30283a;
+  --coza-surface-muted: #2a2825;
 
   --coza-text-primary: #ffffff;
-  --coza-text-secondary: #d5cfdd;
-  --coza-text-muted: #aaa2b5;
+  --coza-text-secondary: #d2cec6;
+  --coza-text-muted: #a29d93;
 
   --coza-border: rgba(255, 255, 255, 0.09);
 
@@ -513,14 +513,14 @@ body.dark:has(.analytics-dashboard-root) {
     linear-gradient(
       135deg,
       rgba(139, 92, 246, 0.32),
-      rgba(122, 63, 240, 0.18)
+      rgba(162, 113, 58, 0.18)
     );
 
   border: 1px solid rgba(168, 117, 255, 0.20);
 
   box-shadow:
     inset 3px 0 0 var(--coza-gold),
-    0 4px 16px rgba(122, 63, 240, 0.12);
+    0 4px 16px rgba(162, 113, 58, 0.12);
 }
 
 /**
@@ -681,7 +681,7 @@ body.dark:has(.analytics-dashboard-root) {
   @apply rounded-2xl border backdrop-blur-md shadow-theme-sm;
 
   background: rgba(255, 255, 255, 0.78);
-  border-color: rgba(122, 63, 240, 0.12);
+  border-color: rgba(162, 113, 58, 0.12);
 }
 
 .dark .coza-glass-accent {
@@ -698,7 +698,7 @@ body.dark:has(.analytics-dashboard-root) {
   background:
     linear-gradient(
       135deg,
-      rgba(122, 63, 240, 0.16),
+      rgba(162, 113, 58, 0.16),
       rgba(255, 255, 255, 0.08)
     );
 
@@ -790,11 +790,11 @@ body.dark:has(.analytics-dashboard-root) {
 
   &::-webkit-scrollbar-thumb {
     border-radius: 9999px;
-    background: rgba(122, 63, 240, 0.22);
+    background: rgba(162, 113, 58, 0.22);
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: rgba(122, 63, 240, 0.42);
+    background: rgba(162, 113, 58, 0.42);
   }
 }
 
@@ -832,7 +832,7 @@ body.dark:has(.analytics-dashboard-root) {
   color: var(--coza-primary);
   background: var(--coza-surface);
   border: 1px solid var(--coza-primary-border);
-  box-shadow: 0 10px 30px rgba(122, 63, 240, 0.15);
+  box-shadow: 0 10px 30px rgba(162, 113, 58, 0.15);
 }
 
 /**
@@ -883,7 +883,7 @@ body.dark:has(.analytics-dashboard-root) {
   a
 ):focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(122, 63, 240, 0.18);
+  box-shadow: 0 0 0 3px rgba(162, 113, 58, 0.18);
 }
 
 @layer utilities {
@@ -937,7 +937,7 @@ body.dark:has(.analytics-dashboard-root) {
 }
 
 .apexcharts-gridline {
-  stroke: rgba(122, 63, 240, 0.08) !important;
+  stroke: rgba(162, 113, 58, 0.08) !important;
 }
 
 .dark .apexcharts-gridline {
@@ -983,7 +983,7 @@ body.dark:has(.analytics-dashboard-root) {
 }
 
 .jvectormap-region.jvectormap-element {
-  fill: #d5cfdd !important;
+  fill: #d2cec6 !important;
 
   &:hover {
     fill: var(--coza-primary) !important;
@@ -1024,16 +1024,16 @@ body.dark:has(.analytics-dashboard-root) {
 }
 
 .dark .flatpickr-calendar {
-  background: #211a2a !important;
+  background: #1a1917 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
-  color: #d5cfdd !important;
+  color: #d2cec6 !important;
   box-shadow: var(--shadow-theme-xl) !important;
 }
 
 /* SimpleBar */
 .simplebar-scrollbar::before {
   border-radius: 9999px !important;
-  background: rgba(122, 63, 240, 0.25) !important;
+  background: rgba(162, 113, 58, 0.25) !important;
   opacity: 1 !important;
 }
 
@@ -1046,21 +1046,21 @@ body.dark:has(.analytics-dashboard-root) {
   background:
     linear-gradient(
       135deg,
-      #7a3ff0 0%,
-      #8b5cf6 48%,
+      #a2713a 0%,
+      #b8864b 48%,
       #e9ad2c 100%
     );
 }
 
 @utility coza-gradient-text {
-  background-image: linear-gradient(to right, #9333ea, #f59e0b);
+  background-image: linear-gradient(to right, #a2713a, #f59e0b);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
 }
 
 @utility coza-purple-glow {
-  box-shadow: 0 8px 30px rgba(122, 63, 240, 0.18);
+  box-shadow: 0 8px 30px rgba(162, 113, 58, 0.18);
 }
 
 @utility coza-gold-glow {
@@ -1082,7 +1082,7 @@ body.dark:has(.analytics-dashboard-root) {
   background:
     linear-gradient(
       120deg,
-      rgba(122, 63, 240, 0.07),
+      rgba(162, 113, 58, 0.07),
       rgba(255, 255, 255, 0.86) 45%,
       rgba(233, 173, 44, 0.07)
     );
@@ -1144,11 +1144,11 @@ body.dark:has(.analytics-dashboard-root) {
   @apply text-sm font-semibold;
 
   color: var(--coza-primary);
-  background: linear-gradient(135deg, rgba(122, 63, 240, 0.14), rgba(233, 173, 44, 0.10));
+  background: linear-gradient(135deg, rgba(162, 113, 58, 0.14), rgba(233, 173, 44, 0.10));
   border: 1px solid var(--coza-primary-border);
   box-shadow:
     inset 3px 0 0 var(--coza-gold),
-    0 4px 14px rgba(122, 63, 240, 0.10);
+    0 4px 14px rgba(162, 113, 58, 0.10);
 }
 
 .dark .coza-menu-item-active {
@@ -1210,7 +1210,7 @@ body.dark:has(.analytics-dashboard-root) {
 
 @utility coza-footer-brand {
   background-image:
-    linear-gradient(90deg, #7a3ff0 0%, #8b5cf6 45%, #e9ad2c 100%);
+    linear-gradient(90deg, #a2713a 0%, #b8864b 45%, #e9ad2c 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -1229,13 +1229,13 @@ body.dark:has(.analytics-dashboard-root) {
   color: var(--coza-text-primary);
   border-color: var(--coza-primary-border);
   background-image:
-    linear-gradient(135deg, rgba(122, 63, 240, 0.06), rgba(233, 173, 44, 0.07));
+    linear-gradient(135deg, rgba(162, 113, 58, 0.06), rgba(233, 173, 44, 0.07));
   box-shadow: var(--shadow-theme-xs);
   color-scheme: light;
 
   &:hover {
     border-color: var(--coza-primary);
-    box-shadow: 0 4px 14px rgba(122, 63, 240, 0.12);
+    box-shadow: 0 4px 14px rgba(162, 113, 58, 0.12);
   }
 
   &:focus {
@@ -1252,7 +1252,7 @@ body.dark:has(.analytics-dashboard-root) {
 }
 
 .dark .coza-select-standout option {
-  background-color: #211a2a;
+  background-color: #1a1917;
   color: #ffffff;
 }
 
@@ -1281,7 +1281,7 @@ body.dark:has(.analytics-dashboard-root) {
   color: var(--coza-text-primary);
   border-color: var(--coza-primary-border);
   background-image:
-    linear-gradient(135deg, rgba(122, 63, 240, 0.06), rgba(233, 173, 44, 0.07));
+    linear-gradient(135deg, rgba(162, 113, 58, 0.06), rgba(233, 173, 44, 0.07));
   box-shadow: var(--shadow-theme-xs);
   color-scheme: light;
 
@@ -1300,7 +1300,7 @@ body.dark:has(.analytics-dashboard-root) {
 
   &:hover {
     border-color: var(--coza-primary);
-    box-shadow: 0 4px 14px rgba(122, 63, 240, 0.12);
+    box-shadow: 0 4px 14px rgba(162, 113, 58, 0.12);
   }
 
   &:focus {
@@ -1459,7 +1459,7 @@ body.dark:has(.analytics-dashboard-root) {
 @utility coza-toggle-btn-active {
   color: #ffffff !important;
   background: linear-gradient(135deg, var(--coza-primary), var(--coza-gold)) !important;
-  box-shadow: 0 4px 12px rgba(122, 63, 240, 0.28);
+  box-shadow: 0 4px 12px rgba(162, 113, 58, 0.28);
 }
 
 @utility coza-geo-export-btn {
@@ -1488,7 +1488,7 @@ body.dark:has(.analytics-dashboard-root) {
   background:
     linear-gradient(
       135deg,
-      rgba(122, 63, 240, 0.05),
+      rgba(162, 113, 58, 0.05),
       rgba(255, 255, 255, 0.92) 60%,
       rgba(233, 173, 44, 0.05)
     );
@@ -1500,7 +1500,7 @@ body.dark:has(.analytics-dashboard-root) {
   &:focus-visible {
     border-color: var(--coza-gold);
     box-shadow:
-      0 10px 28px rgba(122, 63, 240, 0.16),
+      0 10px 28px rgba(162, 113, 58, 0.16),
       0 6px 16px rgba(233, 173, 44, 0.12);
     transform: translateY(-1px);
   }
@@ -1663,13 +1663,13 @@ body.dark:has(.analytics-dashboard-root) {
  */
 @keyframes coza-marker-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.8), 0 0 0 0 rgba(75, 0, 130, 0.6);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.8), 0 0 0 0 rgba(122, 82, 48, 0.6);
   }
   70% {
-    box-shadow: 0 0 0 14px rgba(212, 175, 55, 0), 0 0 0 22px rgba(75, 0, 130, 0);
+    box-shadow: 0 0 0 14px rgba(212, 175, 55, 0), 0 0 0 22px rgba(122, 82, 48, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0), 0 0 0 0 rgba(75, 0, 130, 0);
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0), 0 0 0 0 rgba(122, 82, 48, 0);
   }
 }
 
@@ -1798,7 +1798,7 @@ body.dark:has(.analytics-dashboard-root) {
 
 .leaflet-control-zoom-in:hover,
 .leaflet-control-zoom-out:hover {
-  background-color: rgba(75, 0, 130, 0.45) !important;
+  background-color: rgba(122, 82, 48, 0.45) !important;
   color: #ffffff !important;
   text-shadow: 0 0 6px var(--coza-gold-primary);
 }
@@ -1820,7 +1820,7 @@ body.dark:has(.analytics-dashboard-root) {
 }
 
 .dark .analytics-dashboard-root .leaflet-container {
-  background-color: #130e19 !important;
+  background-color: #0d0d0c !important;
 }
 
 .analytics-dashboard-root .leaflet-popup-content-wrapper {
@@ -1833,7 +1833,7 @@ body.dark:has(.analytics-dashboard-root) {
 }
 
 .dark .analytics-dashboard-root .leaflet-popup-content-wrapper {
-  background: #211a2a !important;
+  background: #1a1917 !important;
   color: #ffffff !important;
   border-color: rgba(168, 117, 255, 0.25) !important;
 }
@@ -1843,7 +1843,7 @@ body.dark:has(.analytics-dashboard-root) {
 }
 
 .dark .analytics-dashboard-root .leaflet-popup-tip {
-  background: #211a2a !important;
+  background: #1a1917 !important;
 }
 
 
@@ -1887,16 +1887,16 @@ body.dark:has(.analytics-dashboard-root) {
 :root:not(.dark) {
   /* Legibility: darker secondary / muted text (WCAG AA on white) */
   --coza-text-primary: #1a1325;
-  --coza-text-secondary: #463d54;
+  --coza-text-secondary: #403d38;
   --coza-text-muted: #61576f;
 
   --coza-surface: #ffffff;
-  --coza-surface-soft: #faf8ff;
+  --coza-surface-soft: #fcf9f4;
   --coza-surface-muted: #f2eefb;
 
   --coza-border: #e6def5;
-  --coza-primary-soft: rgba(122, 63, 240, 0.08);
-  --coza-primary-border: rgba(122, 63, 240, 0.24);
+  --coza-primary-soft: rgba(162, 113, 58, 0.08);
+  --coza-primary-border: rgba(162, 113, 58, 0.24);
 
   /* Light-only design tokens */
   --lm-canvas: #f6f3fc;
@@ -1908,7 +1908,7 @@ body.dark:has(.analytics-dashboard-root) {
     0 2px 4px rgba(40, 16, 82, 0.06),
     0 12px 28px -8px rgba(88, 40, 190, 0.18),
     0 28px 56px -22px rgba(88, 40, 190, 0.24);
-  --lm-edge: linear-gradient(90deg, #7a3ff0 0%, #a875ff 55%, #e9ad2c 100%);
+  --lm-edge: linear-gradient(90deg, #a2713a 0%, #c39656 55%, #e9ad2c 100%);
 }
 
 /* ---------- Canvas ---------- */
@@ -1919,7 +1919,7 @@ body:not(.dark):has(.analytics-dashboard-root) {
 
 html:not(.dark) .analytics-dashboard-root {
   background:
-    radial-gradient(900px 480px at 100% -5%, rgba(122, 63, 240, 0.13), transparent 62%),
+    radial-gradient(900px 480px at 100% -5%, rgba(162, 113, 58, 0.13), transparent 62%),
     radial-gradient(760px 420px at -5% 8%, rgba(233, 173, 44, 0.12), transparent 60%),
     radial-gradient(900px 600px at 50% 115%, rgba(16, 185, 129, 0.06), transparent 65%),
     var(--lm-canvas);
@@ -1932,7 +1932,7 @@ html:not(.dark) .coza-header-glass {
     linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 246, 255, 0.84));
   -webkit-backdrop-filter: saturate(180%) blur(16px);
   backdrop-filter: saturate(180%) blur(16px);
-  border-bottom: 1px solid rgba(122, 63, 240, 0.14);
+  border-bottom: 1px solid rgba(162, 113, 58, 0.14);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.9) inset,
     0 10px 30px -18px rgba(88, 40, 190, 0.28);
@@ -1961,7 +1961,7 @@ html:not(.dark) .coza-sidebar-glass {
     linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 243, 255, 0.94) 55%, rgba(255, 249, 235, 0.92) 100%);
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
-  border-right: 1px solid rgba(122, 63, 240, 0.14);
+  border-right: 1px solid rgba(162, 113, 58, 0.14);
   box-shadow: 8px 0 40px -24px rgba(88, 40, 190, 0.35);
 }
 
@@ -1976,7 +1976,7 @@ html:not(.dark) .coza-menu-item-inactive {
 }
 
 html:not(.dark) .coza-menu-item-inactive:hover {
-  background: rgba(122, 63, 240, 0.08);
+  background: rgba(162, 113, 58, 0.08);
   color: #4a1fb0;
   transform: translateX(2px);
 }
@@ -1984,7 +1984,7 @@ html:not(.dark) .coza-menu-item-inactive:hover {
 html:not(.dark) .coza-menu-item-active {
   color: #ffffff;
   border-radius: 0.85rem;
-  background: linear-gradient(135deg, #6828d9 0%, #8b5cf6 62%, #c98f1d 130%);
+  background: linear-gradient(135deg, #855a2e 0%, #b8864b 62%, #c98f1d 130%);
   box-shadow:
     0 8px 20px -6px rgba(104, 40, 217, 0.55),
     0 1px 0 rgba(255, 255, 255, 0.25) inset;
@@ -1995,7 +1995,7 @@ html:not(.dark) .coza-menu-item-icon-active {
 }
 
 html:not(.dark) .coza-menu-item-icon-inactive {
-  color: #7a3ff0;
+  color: #a2713a;
 }
 
 /* ---------- Cards: crisp white, layered violet shadow, signature edge ---------- */
@@ -2044,7 +2044,7 @@ html:not(.dark) .analytics-card::before {
 
 html:not(.dark) .analytics-card:hover {
   box-shadow: var(--lm-card-shadow-hover);
-  border-color: rgba(122, 63, 240, 0.28);
+  border-color: rgba(162, 113, 58, 0.28);
   transform: translateY(-2px);
 }
 
@@ -2057,23 +2057,23 @@ html:not(.dark) .analytics-card-title {
 html:not(.dark) .analytics-chart-placeholder {
   color: var(--coza-text-muted);
   background:
-    repeating-linear-gradient(45deg, rgba(122, 63, 240, 0.035) 0 10px, transparent 10px 20px);
+    repeating-linear-gradient(45deg, rgba(162, 113, 58, 0.035) 0 10px, transparent 10px 20px);
   border-radius: 0.9rem;
 }
 
 /* ---------- Charts ---------- */
 html:not(.dark) .apexcharts-gridline {
-  stroke: rgba(122, 63, 240, 0.10) !important;
+  stroke: rgba(162, 113, 58, 0.10) !important;
 }
 
 html:not(.dark) .apexcharts-text,
 html:not(.dark) .apexcharts-legend-text {
-  fill: #463d54 !important;
-  color: #463d54 !important;
+  fill: #403d38 !important;
+  color: #403d38 !important;
 }
 
 html:not(.dark) .apexcharts-tooltip.apexcharts-theme-light {
-  border: 1px solid rgba(122, 63, 240, 0.2) !important;
+  border: 1px solid rgba(162, 113, 58, 0.2) !important;
   border-radius: 0.9rem !important;
   box-shadow: 0 16px 36px -12px rgba(88, 40, 190, 0.3) !important;
   background: rgba(255, 255, 255, 0.97) !important;
@@ -2085,8 +2085,8 @@ html:not(.dark) .apexcharts-tooltip.apexcharts-theme-light {
 html:not(.dark) .coza-select-standout,
 html:not(.dark) .coza-date-input {
   background-color: #ffffff;
-  background-image: linear-gradient(135deg, rgba(122, 63, 240, 0.05), rgba(233, 173, 44, 0.09));
-  border: 1px solid rgba(122, 63, 240, 0.28);
+  background-image: linear-gradient(135deg, rgba(162, 113, 58, 0.05), rgba(233, 173, 44, 0.09));
+  border: 1px solid rgba(162, 113, 58, 0.28);
   border-radius: 0.8rem;
   color: var(--coza-text-primary);
   box-shadow: 0 1px 2px rgba(40, 16, 82, 0.05);
@@ -2094,19 +2094,19 @@ html:not(.dark) .coza-date-input {
 
 html:not(.dark) .coza-select-standout:hover,
 html:not(.dark) .coza-date-input:hover {
-  border-color: #7a3ff0;
-  box-shadow: 0 8px 20px -10px rgba(122, 63, 240, 0.45);
+  border-color: #a2713a;
+  box-shadow: 0 8px 20px -10px rgba(162, 113, 58, 0.45);
 }
 
 html:not(.dark) .coza-select-standout:focus,
 html:not(.dark) .coza-date-input:focus {
-  border-color: #7a3ff0;
-  box-shadow: 0 0 0 4px rgba(122, 63, 240, 0.14), 0 10px 24px -12px rgba(233, 173, 44, 0.5);
+  border-color: #a2713a;
+  box-shadow: 0 0 0 4px rgba(162, 113, 58, 0.14), 0 10px 24px -12px rgba(233, 173, 44, 0.5);
 }
 
 html:not(.dark) .analytics-dashboard-root input[type="search"] {
   background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(122, 63, 240, 0.26);
+  border-color: rgba(162, 113, 58, 0.26);
 }
 
 /* ---------- Tables ---------- */
@@ -2119,7 +2119,7 @@ html:not(.dark) .coza-table-grid-wrapper {
 html:not(.dark) .coza-table-grid-head th {
   background: linear-gradient(180deg, #f3edff 0%, #ece3ff 100%);
   color: #3a1f78;
-  border-bottom: 1px solid rgba(122, 63, 240, 0.2);
+  border-bottom: 1px solid rgba(162, 113, 58, 0.2);
   letter-spacing: 0.08em;
 }
 
@@ -2132,11 +2132,11 @@ html:not(.dark) .coza-table-grid-row:nth-child(even) {
 }
 
 html:not(.dark) .coza-table-grid-row:hover {
-  background: linear-gradient(90deg, rgba(122, 63, 240, 0.09), rgba(233, 173, 44, 0.07));
+  background: linear-gradient(90deg, rgba(162, 113, 58, 0.09), rgba(233, 173, 44, 0.07));
 }
 
 html:not(.dark) .coza-table-grid-row td {
-  border-bottom-color: rgba(122, 63, 240, 0.08);
+  border-bottom-color: rgba(162, 113, 58, 0.08);
 }
 
 /* ---------- KPI cards (light surfaces get more depth) ---------- */
@@ -2162,7 +2162,7 @@ html:not(.dark) .analytics-dashboard-root section.rounded-2xl.border {
 /* ---------- Status & info chips ---------- */
 html:not(.dark) .analytics-status-primary {
   color: #5520b5;
-  background: rgba(122, 63, 240, 0.10);
+  background: rgba(162, 113, 58, 0.10);
 }
 
 html:not(.dark) .analytics-status-success {
@@ -2177,20 +2177,20 @@ html:not(.dark) .analytics-status-gold {
 
 html:not(.dark) .analytics-refresh-indicator {
   background: rgba(255, 255, 255, 0.96);
-  border-color: rgba(122, 63, 240, 0.25);
+  border-color: rgba(162, 113, 58, 0.25);
   box-shadow: 0 18px 40px -14px rgba(88, 40, 190, 0.35);
 }
 
 /* ---------- Scrollbars ---------- */
 html:not(.dark) .analytics-dashboard-root ::-webkit-scrollbar-thumb {
-  background: rgba(122, 63, 240, 0.28);
+  background: rgba(162, 113, 58, 0.28);
   border-radius: 9999px;
 }
 
 /* ---------- Footer ---------- */
 html:not(.dark) .analytics-dashboard-root footer {
-  border-top: 1px solid rgba(122, 63, 240, 0.16);
-  background: linear-gradient(180deg, transparent, rgba(122, 63, 240, 0.04));
+  border-top: 1px solid rgba(162, 113, 58, 0.16);
+  background: linear-gradient(180deg, transparent, rgba(162, 113, 58, 0.04));
 }
 
 /* ---------- Geo map card (light) ---------- */

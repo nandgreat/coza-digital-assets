@@ -26,11 +26,11 @@ export default function StatsCard({
             glow: 'bg-[#3b82f6]'
         },
         purple: {
-            bg: 'bg-linear-to-br from-[#8b5cf6]/15 to-[#141a33]/80',
-            border: 'border-[#8b5cf6]/20',
-            iconBg: 'bg-[#8b5cf6]/20',
-            iconText: 'text-[#8b5cf6]',
-            glow: 'bg-[#8b5cf6]'
+            bg: 'bg-linear-to-br from-[#b8864b]/15 to-[#141a33]/80',
+            border: 'border-[#b8864b]/20',
+            iconBg: 'bg-[#b8864b]/20',
+            iconText: 'text-[#b8864b]',
+            glow: 'bg-[#b8864b]'
         },
         cyan: {
             bg: 'bg-linear-to-br from-[#06b6d4]/15 to-[#141a33]/80',
